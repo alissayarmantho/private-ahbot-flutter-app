@@ -72,10 +72,14 @@ class UploadScreen extends StatelessWidget {
                                               // Currently it will default to uploading music
                                               // for potato
                                               : "61547e49adbc3d0023ab129c",
-                                          title: uploadController
-                                              .paths.single.name,
-                                          description: "This is great !!!",
-                                          file: uploadController.paths.single)
+                                          // substring to remove the file
+                                          // extension from the title
+                                          title: res.name.substring(
+                                              0, res.name.length - 3),
+                                          // for music, description is not used (for now)
+                                          description: res.name.substring(
+                                              0, res.name.length - 3),
+                                          file: res)
                                     }
                                 });
                           }),
@@ -102,7 +106,8 @@ class UploadScreen extends StatelessWidget {
                                               // default to uploading picture
                                               // for potato
                                               : "61547e49adbc3d0023ab129c",
-                                          title: res.name,
+                                          title: res.name.substring(
+                                              0, res.name.length - 3),
                                           description: "This is great !!!",
                                           file: res)
                                     }
