@@ -2,12 +2,13 @@ import 'package:botapp/interfaces/filterable.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatelessWidget {
-  final TextEditingController textController = TextEditingController();
+  final TextEditingController textController;
   final Filterable controller;
 
   SearchBar({
     Key? key,
     required this.controller,
+    required this.textController,
   }) : super(key: key);
 
   @override

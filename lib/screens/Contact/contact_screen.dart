@@ -1,7 +1,6 @@
 import 'package:botapp/constants.dart';
 import 'package:botapp/controllers/contact_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
-import 'package:botapp/interfaces/filterable.dart';
 import 'package:botapp/models/user.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:botapp/widgets/contact_card.dart';
@@ -65,6 +64,7 @@ class ContactScreen extends StatelessWidget {
                         Expanded(
                           child: SearchBar(
                             controller: contactController,
+                            textController: _searchController,
                           ),
                         ),
                       ],
