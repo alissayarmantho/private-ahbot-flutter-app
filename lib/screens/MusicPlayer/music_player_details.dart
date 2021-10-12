@@ -1,10 +1,11 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:botapp/constants.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:botapp/models/media.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:botapp/widgets/svg_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 
 class MusicPlayerDetails extends StatelessWidget {
   final int currentIndex;
@@ -16,7 +17,8 @@ class MusicPlayerDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioController = Get.put<AudioController>(AudioController());
+    final audioController = Get.put<AudioController>(
+        AudioController(index: currentIndex, musicList: musicList));
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: AppHeader(
@@ -54,12 +56,14 @@ class MusicPlayerDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        "Stargazer",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.w600,
+                      Obx(
+                        () => Text(
+                          musicList[audioController.currIndex.value].title,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -67,39 +71,14 @@ class MusicPlayerDetails extends StatelessWidget {
                       ),
                       Container(
                         child: Obx(
-                          () => Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${audioController.position.value.inMinutes}:${audioController.position.value.inSeconds.remainder(60)}",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                              Container(
-                                width: size.width * 0.4,
-                                child: Slider.adaptive(
-                                    activeColor:
-                                        Color.fromRGBO(24, 160, 251, 1),
-                                    inactiveColor: Colors.grey[350],
-                                    value: audioController
-                                        .position.value.inSeconds
-                                        .toDouble(),
-                                    max: audioController
-                                        .musicLength.value.inSeconds
-                                        .toDouble(),
-                                    onChanged: (value) {
-                                      audioController.seekToSec(value.toInt());
-                                    }),
-                              ),
-                              Text(
-                                "${audioController.musicLength.value.inMinutes}:${audioController.musicLength.value.inSeconds.remainder(60)}",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ],
+                          () => Container(
+                            width: size.width * 0.4,
+                            child: ProgressBar(
+                              progress: audioController.currPosition.value,
+                              buffered: audioController.currBuffered.value,
+                              total: audioController.currMusicLength.value,
+                              onSeek: audioController.currPlayerSeek,
+                            ),
                           ),
                         ),
                       ),
@@ -111,7 +90,10 @@ class MusicPlayerDetails extends StatelessWidget {
                             key: UniqueKey(),
                             size: 100,
                             svgAssetPath: 'assets/icons/prev_song.svg',
-                            press: () {},
+                            press: () {
+                              // audioController.onPreviousSongButtonPressed();
+                              audioController.prevCurrPlayerSong();
+                            },
                           ),
                           SizedBox(
                             width: 30,
@@ -119,26 +101,39 @@ class MusicPlayerDetails extends StatelessWidget {
                           Obx(
                             () => Ink(
                               padding: EdgeInsets.all(10),
-                              child: IconButton(
-                                iconSize: 100,
-                                color: Colors.white,
-                                splashColor: Colors.transparent,
-                                // because splash radius cannot be 0 but
-                                // I don't want to have a splash radius
-                                splashRadius: 1,
-                                onPressed: () async {
-                                  //here we will add the functionality of the play button
-                                  // if (!audioController.playing.value) {
-                                  //now let's play the song
-                                  audioController.player.value.play(
-                                      'https://luan.xyz/files/audio/ambient_c_motion.mp3');
-                                },
-                                icon: Icon(
-                                  audioController.playing.value
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                ),
-                              ),
+                              child: audioController.isLoading.value
+                                  ? SizedBox(
+                                      width: 116,
+                                      height: 116,
+                                      child: Center(
+                                          child: CircularProgressIndicator()))
+                                  : audioController.isPlaying.value
+                                      ? IconButton(
+                                          iconSize: 100,
+                                          color: Colors.white,
+                                          splashColor: Colors.transparent,
+                                          // because splash radius cannot be 0 but
+                                          // I don't want to have a splash radius
+                                          splashRadius: 1,
+                                          onPressed: () async {
+                                            print("pause");
+                                            audioController.pauseCurrPlayer();
+                                          },
+                                          icon: Icon(Icons.pause))
+                                      : IconButton(
+                                          iconSize: 100,
+                                          color: Colors.white,
+                                          splashColor: Colors.transparent,
+                                          // because splash radius cannot be 0 but
+                                          // I don't want to have a splash radius
+                                          splashRadius: 1,
+                                          onPressed: () async {
+                                            print("play");
+                                            // audioController.play();
+                                            audioController.playCurrPlayer();
+                                          },
+                                          icon: Icon(Icons.play_arrow),
+                                        ),
                               decoration: ShapeDecoration(
                                   color: Color.fromRGBO(86, 204, 242, 1),
                                   shape: CircleBorder()),
@@ -151,7 +146,10 @@ class MusicPlayerDetails extends StatelessWidget {
                             key: UniqueKey(),
                             size: 100,
                             svgAssetPath: 'assets/icons/next_song.svg',
-                            press: () {},
+                            press: () {
+                              // audioController.onNextSongButtonPressed();
+                              audioController.nextCurrPlayerSong();
+                            },
                           ),
                         ],
                       ),
@@ -168,7 +166,14 @@ class MusicPlayerDetails extends StatelessWidget {
                             Radius.circular(40),
                           ),
                         ),
-                        child: Text("No contacts available ..."),
+                        child: Obx(
+                          () => Text(
+                            "Next song: " +
+                                musicList[audioController
+                                        .getNextSongIndex(musicList.length)]
+                                    .title,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -183,57 +188,197 @@ class MusicPlayerDetails extends StatelessWidget {
 }
 
 class AudioController extends GetxController {
-  var player = AudioPlayer().obs;
-  var isLoading = false.obs;
-  var playing = false.obs;
+  // This will play audio after u back. And unfortunately when you go
+  // to another tile, it will play the audio again, causing overlapping audio
+  // TODO: Fix this
+  final player = AudioPlayer().obs;
 
-  var position = new Duration().obs;
-  var musicLength = new Duration().obs;
+  var isLoading = false.obs;
+  var isPlaying = false.obs;
+  var index;
+  var musicList;
+  var currIndex = 0.obs;
+  var currTitle = "".obs;
+
+  var currPosition = new Duration().obs;
+  var currBuffered = new Duration().obs;
+  var currMusicLength = new Duration().obs;
+
+  var currPlayer = AudioPlayer().obs;
+
+  AudioController({required this.index, required this.musicList});
 
   @override
   void onInit() {
+    setCurrIndex(index);
+    // initialisePlaylist();
+    // listenToPlayerState();
+    // listenToPlayerPosition();
+    initCurrPlayer(musicList[currIndex.value].link);
+    listenToCurrPlayerPosition();
+    listenToCurrPlayerState();
     super.onInit();
   }
 
-  void play(String url) async {
-    //here we will add the functionality of the play button
-    if (!playing.value) {
-      await player.value
-          .play('http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p')
-          .then((res) => {
-                playing.value = true,
-                getDuration(),
-                getPosition(),
-                print(playing.value)
-              })
-          .catchError((err) {
-        Get.snackbar(
-          "Error Playing Music File",
-          err,
-          snackPosition: SnackPosition.BOTTOM,
-          colorText: Colors.white,
-          backgroundColor: Colors.red,
-        );
-      });
-    } else {
-      player.value.pause();
-      playing.value = false;
-    }
-  }
-
-  void seekToSec(int sec) {
-    Duration newPos = Duration(seconds: sec);
-    player.value.seek(newPos);
-  }
-
-  void getDuration() {
-    player.value.onDurationChanged.listen((Duration d) {
-      musicLength.value = d;
+  void initCurrPlayer(String link) async {
+    await currPlayer.value.setUrl(link).catchError((err) {
+      Get.snackbar(
+        "Error Loading Music",
+        err,
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        backgroundColor: Colors.red,
+      );
     });
   }
 
-  void getPosition() {
-    player.value.onAudioPositionChanged
-        .listen((Duration p) => position.value = p);
+  void playCurrPlayer() {
+    currPlayer.value.play();
+  }
+
+  void pauseCurrPlayer() {
+    currPlayer.value.pause();
+  }
+
+  void nextCurrPlayerSong() {
+    if (currIndex.value == musicList.length - 1) {
+      currIndex.value = 0;
+    } else {
+      currIndex.value += 1;
+    }
+    initCurrPlayer(musicList[currIndex.value].link);
+    currTitle.value = musicList[currIndex.value].title;
+  }
+
+  void prevCurrPlayerSong() {
+    if (currIndex.value == 0) {
+      currIndex.value = musicList.length - 1;
+    } else {
+      currIndex.value -= 1;
+    }
+    currPlayer.value.dispose();
+    currPlayer.value = AudioPlayer();
+    initCurrPlayer(musicList[currIndex.value].link);
+    currTitle.value = musicList[currIndex.value].title;
+  }
+
+  void listenToPlayerState() {
+    player.value.playerStateStream.listen((playerState) {
+      print("listening to player state");
+      isPlaying.value = playerState.playing;
+      final processingState = playerState.processingState;
+      if (processingState == ProcessingState.loading ||
+          processingState == ProcessingState.buffering) {
+        isLoading.value = true;
+      } else {
+        isLoading.value = false;
+      }
+    });
+  }
+
+  void listenToPlayerPosition() {
+    print("listening to player position");
+    player.value.positionStream.listen((position) {
+      currPosition.value = position;
+    });
+    player.value.durationStream.listen((totalDuration) {
+      currMusicLength.value = totalDuration ?? Duration.zero;
+    });
+    player.value.bufferedPositionStream.listen((bufferedPosition) {
+      currBuffered.value = bufferedPosition;
+    });
+  }
+
+  void listenToCurrPlayerPosition() {
+    print("listening to Curr player position");
+    currPlayer.value.positionStream.listen((position) {
+      currPosition.value = position;
+    });
+    currPlayer.value.durationStream.listen((totalDuration) {
+      currMusicLength.value = totalDuration ?? Duration.zero;
+    });
+    currPlayer.value.bufferedPositionStream.listen((bufferedPosition) {
+      currBuffered.value = bufferedPosition;
+    });
+  }
+
+  void listenToCurrPlayerState() {
+    currPlayer.value.playerStateStream.listen((playerState) {
+      print("listening to player state");
+      isPlaying.value = playerState.playing;
+      final processingState = playerState.processingState;
+      if (processingState == ProcessingState.loading ||
+          processingState == ProcessingState.buffering) {
+        isLoading.value = true;
+      } else {
+        isLoading.value = false;
+      }
+    });
+  }
+
+  void listenForChangesInSequenceState() {
+    player.value.sequenceStateStream.listen((sequenceState) {
+      print("listening to sequence state");
+      if (sequenceState == null) return;
+      final currentItem = sequenceState.currentSource;
+      setCurrIndex(sequenceState.currentIndex);
+      currTitle.value = currentItem?.tag as String? ?? "";
+    });
+  }
+
+  void initialisePlaylist() async {
+    var audioSources =
+        musicList.map((music) => AudioSource.uri(music.link, tag: music.title));
+    // Will loop the entire playlist by default
+    player.value.setLoopMode(LoopMode.all);
+    print("initialisePlaylist");
+    await player.value
+        .setAudioSource(ConcatenatingAudioSource(children: [audioSources]))
+        .then(
+            (res) => Get.snackbar("Loaded Music Playlist Successfully", "Done"))
+        .catchError((err) {
+      Get.snackbar(
+        "Error Loading Music Playlist",
+        err,
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        backgroundColor: Colors.red,
+      );
+    });
+  }
+
+  void onPreviousSongButtonPressed() {
+    player.value.seekToPrevious();
+  }
+
+  void onNextSongButtonPressed() {
+    player.value.seekToNext();
+  }
+
+  void setCurrIndex(int value) {
+    currIndex.value = value;
+  }
+
+  int getNextSongIndex(int listLength) {
+    if (currIndex.value == listLength - 1) {
+      return 0;
+    }
+    return currIndex.value + 1;
+  }
+
+  void play() {
+    player.value.play();
+  }
+
+  void pause() {
+    player.value.pause();
+  }
+
+  void seek(Duration position) {
+    player.value.seek(position);
+  }
+
+  void currPlayerSeek(Duration position) {
+    currPlayer.value.seek(position);
   }
 }
