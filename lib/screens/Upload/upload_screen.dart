@@ -75,10 +75,10 @@ class UploadScreen extends StatelessWidget {
                                           // substring to remove the file
                                           // extension from the title
                                           title: res.name.substring(
-                                              0, res.name.length - 3),
+                                              0, res.name.length - 4),
                                           // for music, description is not used (for now)
                                           description: res.name.substring(
-                                              0, res.name.length - 3),
+                                              0, res.name.length - 4),
                                           file: res)
                                     }
                                 });
@@ -107,7 +107,7 @@ class UploadScreen extends StatelessWidget {
                                               // for potato
                                               : "61547e49adbc3d0023ab129c",
                                           title: res.name.substring(
-                                              0, res.name.length - 3),
+                                              0, res.name.length - 4),
                                           description: "This is great !!!",
                                           file: res)
                                     }
