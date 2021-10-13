@@ -52,130 +52,132 @@ class MusicPlayerDetails extends StatelessWidget {
                   SizedBox(
                     width: 30,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Obx(
-                        () => Text(
-                          musicList[audioController.currIndex.value].title,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        child: Obx(
-                          () => Container(
-                            width: size.width * 0.4,
-                            child: ProgressBar(
-                              progress: audioController.currPosition.value,
-                              buffered: audioController.currBuffered.value,
-                              total: audioController.currMusicLength.value,
-                              onSeek: audioController.currPlayerSeek,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SVGButton(
-                            key: UniqueKey(),
-                            size: 100,
-                            svgAssetPath: 'assets/icons/prev_song.svg',
-                            press: () {
-                              // audioController.onPreviousSongButtonPressed();
-                              audioController.prevCurrPlayerSong();
-                            },
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          Obx(
-                            () => Ink(
-                              padding: EdgeInsets.all(10),
-                              child: audioController.isLoading.value
-                                  ? SizedBox(
-                                      width: 116,
-                                      height: 116,
-                                      child: Center(
-                                          child: CircularProgressIndicator()))
-                                  : audioController.isPlaying.value
-                                      ? IconButton(
-                                          iconSize: 100,
-                                          color: Colors.white,
-                                          splashColor: Colors.transparent,
-                                          // because splash radius cannot be 0 but
-                                          // I don't want to have a splash radius
-                                          splashRadius: 1,
-                                          onPressed: () async {
-                                            print("pause");
-                                            audioController.pauseCurrPlayer();
-                                          },
-                                          icon: Icon(Icons.pause))
-                                      : IconButton(
-                                          iconSize: 100,
-                                          color: Colors.white,
-                                          splashColor: Colors.transparent,
-                                          // because splash radius cannot be 0 but
-                                          // I don't want to have a splash radius
-                                          splashRadius: 1,
-                                          onPressed: () async {
-                                            print("play");
-                                            // audioController.play();
-                                            audioController.playCurrPlayer();
-                                          },
-                                          icon: Icon(Icons.play_arrow),
-                                        ),
-                              decoration: ShapeDecoration(
-                                  color: Color.fromRGBO(86, 204, 242, 1),
-                                  shape: CircleBorder()),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          SVGButton(
-                            key: UniqueKey(),
-                            size: 100,
-                            svgAssetPath: 'assets/icons/next_song.svg',
-                            press: () {
-                              // audioController.onNextSongButtonPressed();
-                              audioController.nextCurrPlayerSong();
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        width: size.width * 0.415,
-                        margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          color: kPrimaryLightColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(40),
-                          ),
-                        ),
-                        child: Obx(
+                  SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Obx(
                           () => Text(
-                            "Next song: " +
-                                musicList[audioController
-                                        .getNextSongIndex(musicList.length)]
-                                    .title,
+                            musicList[audioController.currIndex.value].title,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 32.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          child: Obx(
+                            () => Container(
+                              width: size.width * 0.4,
+                              child: ProgressBar(
+                                progress: audioController.currPosition.value,
+                                buffered: audioController.currBuffered.value,
+                                total: audioController.currMusicLength.value,
+                                onSeek: audioController.currPlayerSeek,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SVGButton(
+                              key: UniqueKey(),
+                              size: 100,
+                              svgAssetPath: 'assets/icons/prev_song.svg',
+                              press: () {
+                                // audioController.onPreviousSongButtonPressed();
+                                audioController.prevCurrPlayerSong();
+                              },
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            Obx(
+                              () => Ink(
+                                padding: EdgeInsets.all(10),
+                                child: audioController.isLoading.value
+                                    ? SizedBox(
+                                        width: 116,
+                                        height: 116,
+                                        child: Center(
+                                            child: CircularProgressIndicator()))
+                                    : audioController.isPlaying.value
+                                        ? IconButton(
+                                            iconSize: 100,
+                                            color: Colors.white,
+                                            splashColor: Colors.transparent,
+                                            // because splash radius cannot be 0 but
+                                            // I don't want to have a splash radius
+                                            splashRadius: 1,
+                                            onPressed: () async {
+                                              print("pause");
+                                              audioController.pauseCurrPlayer();
+                                            },
+                                            icon: Icon(Icons.pause))
+                                        : IconButton(
+                                            iconSize: 100,
+                                            color: Colors.white,
+                                            splashColor: Colors.transparent,
+                                            // because splash radius cannot be 0 but
+                                            // I don't want to have a splash radius
+                                            splashRadius: 1,
+                                            onPressed: () async {
+                                              print("play");
+                                              // audioController.play();
+                                              audioController.playCurrPlayer();
+                                            },
+                                            icon: Icon(Icons.play_arrow),
+                                          ),
+                                decoration: ShapeDecoration(
+                                    color: Color.fromRGBO(86, 204, 242, 1),
+                                    shape: CircleBorder()),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            SVGButton(
+                              key: UniqueKey(),
+                              size: 100,
+                              svgAssetPath: 'assets/icons/next_song.svg',
+                              press: () {
+                                // audioController.onNextSongButtonPressed();
+                                audioController.nextCurrPlayerSong();
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          width: size.width * 0.415,
+                          margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: kPrimaryLightColor,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(40),
+                            ),
+                          ),
+                          child: Obx(
+                            () => Text(
+                              "Next song: " +
+                                  musicList[audioController
+                                          .getNextSongIndex(musicList.length)]
+                                      .title,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
