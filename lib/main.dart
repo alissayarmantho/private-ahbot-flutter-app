@@ -58,7 +58,9 @@ class AuthenticationWrapper extends GetWidget<AuthController> {
       if (Get.find<AuthController>().isLoggedIn.value) {
         if (userController.currentUser.value == User.nullUser) {
           userController.fetchUser();
+          // To always get a new AudioPlayer after logging in
           Get.find<AudioController>().currPlayer.value = AudioPlayer();
+          // initialize the listener to listen to the AudioPlayer added
           Get.find<AudioController>()
               .initializeListeningAfterSettingCurrPlayer();
         }

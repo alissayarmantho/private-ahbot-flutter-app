@@ -1,12 +1,10 @@
 import 'package:botapp/constants.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:botapp/controllers/audio_controller.dart';
-import 'package:botapp/models/media.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:botapp/widgets/svg_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
 
 class MusicPlayerDetails extends StatelessWidget {
   final int currentIndex;
