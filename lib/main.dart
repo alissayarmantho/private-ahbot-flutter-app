@@ -3,9 +3,11 @@ import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'constants.dart';
+import 'controllers/audio_controller.dart';
 import 'controllers/bindings/initial_binding.dart';
 import 'controllers/user_controller.dart';
 import 'models/user.dart';
@@ -56,6 +58,9 @@ class AuthenticationWrapper extends GetWidget<AuthController> {
       if (Get.find<AuthController>().isLoggedIn.value) {
         if (userController.currentUser.value == User.nullUser) {
           userController.fetchUser();
+          Get.find<AudioController>().currPlayer.value = AudioPlayer();
+          Get.find<AudioController>()
+              .initializeListeningAfterSettingCurrPlayer();
         }
         if (!userController.isLoading.value) {
           User currentUser = userController.currentUser.value;

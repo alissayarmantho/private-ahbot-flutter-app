@@ -1,3 +1,4 @@
+import 'package:botapp/controllers/audio_controller.dart';
 import 'package:botapp/controllers/media_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
 import 'package:botapp/models/user.dart';
@@ -14,6 +15,7 @@ class MusicPlayerScreen extends StatelessWidget {
 
     final MediaController mediaController =
         Get.put<MediaController>(MediaController());
+    var audioController = Get.find<AudioController>();
     mediaController.fetchAllMedia(mediaType: "music", elderId: currentUser.id);
     return Scaffold(
       body: AppHeader(
@@ -74,9 +76,10 @@ class MusicPlayerScreen extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 return RawMaterialButton(
                                   onPressed: () {
+                                    audioController.setMusicList(
+                                        mediaController.musicList);
                                     Get.to(() => MusicPlayerDetails(
                                           currentIndex: index,
-                                          musicList: mediaController.musicList,
                                         ));
                                   },
                                   child: Hero(

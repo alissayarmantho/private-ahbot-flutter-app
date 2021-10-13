@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+// The numpad breaks in smaller screen, I am not sure why I can't use
+// SingleScrollView, it is not necessary for now because the tablet screen
+// size is fixed, but it would be nice to fix this.
+// TODO: Figure this out
 class ContactScreen extends StatelessWidget {
   final _searchController = TextEditingController();
   @override
