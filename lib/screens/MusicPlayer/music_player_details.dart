@@ -14,7 +14,8 @@ class MusicPlayerDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audioController = Get.find<AudioController>();
-    if (audioController.currIndex.value != currentIndex) {
+    if (audioController.currIndex.value != currentIndex ||
+        !audioController.isPlaying.value) {
       audioController.setCurrIndex(currentIndex);
     }
     final Size size = MediaQuery.of(context).size;

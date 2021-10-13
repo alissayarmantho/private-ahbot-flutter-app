@@ -11,7 +11,6 @@ class AudioController extends GetxController {
   // Ideally we can use the playlist feature of this library, but I am not sure why
   // I think the initialization didn't work
   // TODO: Find out why
-  final player = AudioPlayer().obs;
 
   var isLoading = false.obs;
   var isPlaying = false.obs;
@@ -39,8 +38,16 @@ class AudioController extends GetxController {
     musicList.value = newMusicList;
   }
 
+  void setCurrPlayer(AudioPlayer player) {
+    currPlayer = player;
+  }
+
+  AudioPlayer getCurrPlayer() {
+    return currPlayer;
+  }
+
   void initCurrPlayer(String link) async {
-    await currPlayer.value.setUrl(link).catchError((err) {
+    await currPlayer.setUrl(link).catchError((err) {
       Get.snackbar(
         "Error Loading Music",
         err,
@@ -68,19 +75,19 @@ class AudioController extends GetxController {
   }
 
   void listenToCurrPlayerPosition() {
-    currPlayer.value.positionStream.listen((position) {
+    currPlayer.positionStream.listen((position) {
       currPosition.value = position;
     });
-    currPlayer.value.durationStream.listen((totalDuration) {
+    currPlayer.durationStream.listen((totalDuration) {
       currMusicLength.value = totalDuration ?? Duration.zero;
     });
-    currPlayer.value.bufferedPositionStream.listen((bufferedPosition) {
+    currPlayer.bufferedPositionStream.listen((bufferedPosition) {
       currBuffered.value = bufferedPosition;
     });
   }
 
   void listenToCurrPlayerState() {
-    currPlayer.value.playerStateStream.listen((playerState) {
+    currPlayer.playerStateStream.listen((playerState) {
       isPlaying.value = playerState.playing;
       final processingState = playerState.processingState;
       if (processingState == ProcessingState.loading ||
@@ -111,14 +118,14 @@ class AudioController extends GetxController {
   }
 
   void playCurrPlayer() {
-    currPlayer.value.play();
+    currPlayer.play();
   }
 
   void pauseCurrPlayer() {
-    currPlayer.value.pause();
+    currPlayer.pause();
   }
 
   void currPlayerSeek(Duration position) {
-    currPlayer.value.seek(position);
+    currPlayer.seek(position);
   }
 }

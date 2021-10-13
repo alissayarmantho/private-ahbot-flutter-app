@@ -8,6 +8,6 @@ class InitialBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<AuthController>(() => AuthController());
     Get.lazyPut<UserController>(() => UserController());
-    Get.put<AudioController>(AudioController());
+    Get.lazyPut<AudioController>(() => AudioController());
   }
 }

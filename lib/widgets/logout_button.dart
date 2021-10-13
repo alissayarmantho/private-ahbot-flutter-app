@@ -19,7 +19,7 @@ class LogoutButton extends GetWidget<AuthController> {
       onPressed: () {
         Get.find<UserController>().removeCurrentUser();
         // Remove previous currPlayer audio player instance
-        Get.find<AudioController>().currPlayer.value.dispose();
+        Get.find<AudioController>().getCurrPlayer().dispose();
         controller.logout();
       },
     );
