@@ -12,10 +12,10 @@ class MusicPlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User currentUser = Get.find<UserController>().currentUser.value;
-
+    final Size size = MediaQuery.of(context).size;
     final MediaController mediaController =
         Get.put<MediaController>(MediaController());
-    var audioController = Get.find<AudioController>();
+    final audioController = Get.find<AudioController>();
     mediaController.fetchAllMedia(mediaType: "music", elderId: currentUser.id);
     return Scaffold(
       body: AppHeader(
@@ -52,7 +52,8 @@ class MusicPlayerScreen extends StatelessWidget {
                   : mediaController.musicList.length == 0
                       ? ZeroResult(
                           text:
-                              "I think you have not uploaded anything so far...")
+                              "I think you have not uploaded anything so far...",
+                        )
                       : Expanded(
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -82,19 +83,38 @@ class MusicPlayerScreen extends StatelessWidget {
                                           currentIndex: index,
                                         ));
                                   },
-                                  child: Hero(
-                                    tag: 'logo$index',
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Expanded(
+                                        child: Hero(
+                                          tag: 'music$index',
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                          fit: BoxFit.cover,
                                         ),
                                       ),
-                                    ),
+                                      Center(
+                                        child: Text(
+                                          mediaController
+                                              .musicList[index].title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 );
                               },
