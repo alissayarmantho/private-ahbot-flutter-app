@@ -90,24 +90,29 @@ class ContactScreen extends StatelessWidget {
                                 ),
                                 child: Text("No contacts available ..."),
                               )
-                            : (ListView.builder(
-                                shrinkWrap: true,
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 20, 20, 80),
-                                itemCount: contactController
-                                    .filteredContactList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    child: Center(
-                                      child: ContactCard(
-                                        name: contactController
-                                            .filteredContactList[index].name,
-                                        number: contactController
-                                            .filteredContactList[index].number,
-                                      ),
-                                    ),
-                                  );
-                                })),
+                            : Expanded(
+                                child: (ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20, 20, 20, 80),
+                                    itemCount: contactController
+                                        .filteredContactList.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                        child: Center(
+                                          child: ContactCard(
+                                            name: contactController
+                                                .filteredContactList[index]
+                                                .name,
+                                            number: contactController
+                                                .filteredContactList[index]
+                                                .number,
+                                          ),
+                                        ),
+                                      );
+                                    })),
+                              ),
                   ),
                 ],
               ),
