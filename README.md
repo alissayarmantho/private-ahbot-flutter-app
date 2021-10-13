@@ -1,16 +1,10 @@
 # botapp
 
-A new Flutter project.
+AhBot Robot App
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Install Flutter SDK](https://flutter.dev/docs/get-started/install)
+- After ensuring that you have Flutter, go to the botapp directory. 
+- In command line (in botapp directory), type ```flutter pub get``` to get all the dependencies
+- In command line (in botapp directory), type ```flutter run``` to run the application on a physical device connected to the computer by a data cable. Choose the physical device you want to run the app on when being prompted in the command line. After the application is started on the physical device, you can take off the cable and the app will remain there for you to use.
