@@ -43,6 +43,9 @@ class MediaService {
       required PlatformFile file,
       required String elderId}) async {
     String url = base_api + mediaUrl + "/upload";
+    if (mediaType == "music") {
+      url = url + "-music";
+    }
 
     try {
       String token = await authController.getToken();

@@ -41,8 +41,16 @@ class MusicPlayerDetails extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0),
                         image: DecorationImage(
                             image: NetworkImage(
-                              //TODO: Change this to use album art
-                              "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
+                              audioController.musicList[currentIndex]
+                                              .musicPicPath ==
+                                          null ||
+                                      audioController.musicList[currentIndex]
+                                              .musicPicPath ==
+                                          ""
+                                  ? "https://i.ibb.co/5jrXNLV/musicdefaultimg.png"
+                                  : audioController.musicList[currentIndex]
+                                          .musicPicPath ??
+                                      "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
                             ),
                             fit: BoxFit.contain),
                       ),

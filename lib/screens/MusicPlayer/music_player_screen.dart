@@ -98,7 +98,21 @@ class MusicPlayerScreen extends StatelessWidget {
                                                   BorderRadius.circular(15),
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
+                                                  mediaController
+                                                                  .musicList[
+                                                                      index]
+                                                                  .musicPicPath ==
+                                                              null ||
+                                                          mediaController
+                                                                  .musicList[
+                                                                      index]
+                                                                  .musicPicPath ==
+                                                              ""
+                                                      ? "https://i.ibb.co/5jrXNLV/musicdefaultimg.png"
+                                                      : mediaController
+                                                              .musicList[index]
+                                                              .musicPicPath ??
+                                                          "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),

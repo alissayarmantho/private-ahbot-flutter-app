@@ -11,6 +11,7 @@ class Media {
     required this.elderId,
     required this.link,
     required this.mediaType,
+    this.musicPicPath,
     required this.id,
   });
 
@@ -19,6 +20,7 @@ class Media {
   String elderId;
   String link;
   String mediaType;
+  String? musicPicPath;
   String id;
 
   factory Media.fromRawJson(String str) => Media.fromJson(json.decode(str));
@@ -31,6 +33,8 @@ class Media {
         elderId: json["elderId"],
         link: json["link"],
         mediaType: json["mediaType"],
+        // this will give null for other non music media
+        musicPicPath: json["musicPicPath"],
         id: json["_id"],
       );
 
