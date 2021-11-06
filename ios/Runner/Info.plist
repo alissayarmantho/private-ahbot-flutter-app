@@ -23,6 +23,10 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app use voice recognition</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app use voice recognition</string>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
