@@ -1,7 +1,6 @@
 import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
-import 'package:botapp/screens/MusicPlayer/music_player_details.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:botapp/screens/RobotHomePage/background.dart';

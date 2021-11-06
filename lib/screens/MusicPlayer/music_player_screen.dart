@@ -12,7 +12,6 @@ class MusicPlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User currentUser = Get.find<UserController>().currentUser.value;
-    final Size size = MediaQuery.of(context).size;
     final MediaController mediaController =
         Get.put<MediaController>(MediaController());
     final audioController = Get.find<AudioController>();

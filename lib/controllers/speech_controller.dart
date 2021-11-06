@@ -102,7 +102,7 @@ class SpeechController extends GetxController {
     lastStatus.value = status;
   }
 
-  void _switchLang(selectedVal) {
+  void switchLang(selectedVal) {
     _currentLocaleId = selectedVal;
   }
 
