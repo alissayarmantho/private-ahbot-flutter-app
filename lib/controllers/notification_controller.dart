@@ -8,14 +8,16 @@ import 'package:botapp/models/notification_message.dart';
 
 class NotificationController extends GetxController {
   late IO.Socket socket; // will be initialized in onInit
+  late Timer timer; // will be initialized in onInit
   var messageList = List<NotificationMessage>.from([]).obs;
-  var elderId = "".obs;
+  var elderId = "".obs; // this tablet will be bound to one elderId
   var lastIndex = 0.obs;
   var isSendGoToCharger = false.obs;
   var isGoToChargerAck = false.obs;
   var isSendReceivingCall = false.obs;
   var isReceivingCallAck = false.obs;
-  late Timer timer;
+
+  var currentNotificationBeingShown = "".obs;
 
   @override
   void onInit() {
@@ -43,13 +45,25 @@ class NotificationController extends GetxController {
     socket.on('abc', (message) {
       print('Received: $message');
       List<String> parsedMessage = message.split(";");
-      NotificationMessage newMessage = NotificationMessage(
-        elderId: parsedMessage[0],
-        eventType: parsedMessage[1],
-        actionTrigger: parsedMessage[2],
-        status: parsedMessage[3],
-        sender: parsedMessage[4],
-      );
+      NotificationMessage newMessage;
+      if (parsedMessage.length == 5)
+        newMessage = NotificationMessage(
+          elderId: parsedMessage[0],
+          eventType: parsedMessage[1],
+          actionTrigger: parsedMessage[2],
+          status: parsedMessage[3],
+          sender: parsedMessage[4],
+        );
+      else
+        newMessage = NotificationMessage(
+          elderId: parsedMessage[0],
+          eventType: parsedMessage[1],
+          actionTrigger: parsedMessage[2],
+          status: parsedMessage[3],
+          sender: parsedMessage[4],
+          notificationId: parsedMessage[5],
+        );
+
       if (newMessage.elderId == elderId.value) {
         if (newMessage.status == 'ok' &&
             newMessage.sender == 'robot' &&
@@ -66,7 +80,20 @@ class NotificationController extends GetxController {
           isReceivingCallAck.value = true;
           isSendReceivingCall = false.obs;
         }
-        messageList.add(newMessage);
+
+        if (newMessage.eventType == 'goToElder' &&
+            newMessage.actionTrigger == 'reminder') {
+          if (newMessage.sender == 'server' && newMessage.status == 'request') {
+            currentNotificationBeingShown.value =
+                newMessage.notificationId ?? "";
+          }
+        }
+
+        if (newMessage.sender != 'robot' &&
+            newMessage.actionTrigger != 'reminder' &&
+            newMessage.eventType != 'goToElder') {
+          messageList.add(newMessage);
+        }
       }
     });
   }

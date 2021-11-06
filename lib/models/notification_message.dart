@@ -11,6 +11,7 @@ class NotificationMessage {
     required this.actionTrigger,
     required this.status,
     required this.sender,
+    this.notificationId,
   });
 
   String elderId;
@@ -18,6 +19,7 @@ class NotificationMessage {
   String actionTrigger;
   String status;
   String sender;
+  String? notificationId;
 
   factory NotificationMessage.fromRawJson(String str) =>
       NotificationMessage.fromJson(json.decode(str));
@@ -31,6 +33,8 @@ class NotificationMessage {
         actionTrigger: json["actionTrigger"],
         status: json["status"],
         sender: json["sender"],
+        // This may be null if there is no notificationId
+        notificationId: json["notificationId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,5 +43,6 @@ class NotificationMessage {
         "actionTrigger": actionTrigger,
         "status": status,
         "sender": sender,
+        "notificationId": notificationId ?? "",
       };
 }
