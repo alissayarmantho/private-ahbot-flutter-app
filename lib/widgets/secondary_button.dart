@@ -27,7 +27,7 @@ class SecondaryButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
-              primary: kPrimaryColor,
+              primary: borderColor,
               backgroundColor: color,
               side: BorderSide(color: borderColor, width: 5),
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)),
