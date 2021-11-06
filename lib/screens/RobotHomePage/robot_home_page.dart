@@ -1,3 +1,4 @@
+import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_details.dart';
@@ -14,6 +15,8 @@ class RobotHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final NotificationController notificationController =
+        Get.put<NotificationController>(NotificationController());
     final imagePaths = [
       'assets/cutefaces/blush.png',
       'assets/cutefaces/excited.png',
