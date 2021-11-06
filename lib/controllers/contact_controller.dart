@@ -106,4 +106,30 @@ class ContactController extends GetxController implements Filterable {
     filteredContactList.value =
         contactList.where((contact) => contact.name.contains(name)).toList();
   }
+
+  void multiDeleteContact({required List<String> id}) async {
+    isLoading(true);
+
+    try {
+      await ContactService.multiDeleteContact(id: id).then((res) {
+        Get.snackbar(
+          res,
+          "Successfully deleted all contacts",
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.green,
+        );
+      }).catchError((err) {
+        Get.snackbar(
+          "Error Deleting All Contacts",
+          err,
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+      });
+    } finally {
+      isLoading(false);
+    }
+  }
 }

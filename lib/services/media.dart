@@ -95,4 +95,22 @@ class MediaService {
       return Future.error("Deleting media error");
     }
   }
+
+  static Future<String> multiDeleteMedia({required List<String> id}) async {
+    int length = id.length;
+    for (var id in id) {
+      var url = base_api + mediaUrl + "mediaId=" + id;
+
+      try {
+        var response = await BaseApi.delete(url: url);
+        var jsonString = jsonDecode(response.body);
+        if (response.statusCode != 200) {
+          return Future.error(jsonString['msg']);
+        }
+      } catch (e) {
+        return Future.error("Deleting media error");
+      }
+    }
+    return "Deleted $length media items";
+  }
 }

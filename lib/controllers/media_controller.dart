@@ -103,4 +103,30 @@ class MediaController extends GetxController {
       isLoading(false);
     }
   }
+
+  void multiDeleteMedia({required List<String> id}) async {
+    isLoading(true);
+
+    try {
+      await MediaService.multiDeleteMedia(id: id).then((res) {
+        Get.snackbar(
+          res,
+          "Successfully deleted all media",
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.green,
+        );
+      }).catchError((err) {
+        Get.snackbar(
+          "Error Deleting All Media",
+          err,
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+      });
+    } finally {
+      isLoading(false);
+    }
+  }
 }

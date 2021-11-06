@@ -7,6 +7,7 @@ import 'base_api.dart';
 
 class ContactService {
   static final String contactUrl = "/api/media/contact";
+
   static Future<List<Contact>> fetchAllContacts(
       {required String elderId}) async {
     String url = base_api + contactUrl + "/all?elderId=" + elderId;
@@ -65,5 +66,23 @@ class ContactService {
     } catch (e) {
       return Future.error("Deleting contact error");
     }
+  }
+
+  static Future<String> multiDeleteContact({required List<String> id}) async {
+    int length = id.length;
+    for (var id in id) {
+      String url = base_api + contactUrl + "contactId=" + id;
+
+      try {
+        var response = await BaseApi.delete(url: url);
+        var jsonString = jsonDecode(response.body);
+        if (response.statusCode != 200) {
+          return Future.error(jsonString['msg']);
+        }
+      } catch (e) {
+        return Future.error("Deleting contact error");
+      }
+    }
+    return "Deleted $length contacts";
   }
 }
