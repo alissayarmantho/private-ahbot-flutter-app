@@ -6,12 +6,14 @@ class SecondaryButton extends StatelessWidget {
   final VoidCallback press;
   final Color color, borderColor, textColor;
   final double widthRatio;
+  final double height;
 
   const SecondaryButton({
     required Key key,
     required this.text,
     required this.press,
     required this.widthRatio,
+    this.height = 80,
     this.color = Colors.transparent,
     this.borderColor = kPrimaryColor,
     this.textColor = kPrimaryColor,
@@ -23,6 +25,7 @@ class SecondaryButton extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       width: size.width * widthRatio,
+      height: height,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: OutlinedButton(
@@ -35,6 +38,7 @@ class SecondaryButton extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(color: textColor),
+            textAlign: TextAlign.center,
           ),
         ),
       ),

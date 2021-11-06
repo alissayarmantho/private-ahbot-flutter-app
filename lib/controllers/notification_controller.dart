@@ -6,6 +6,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:botapp/models/notification_message.dart';
 
+// TODO: Find a better way to do this. This is kind of bad. Especially the
+// parsing
 class NotificationController extends GetxController {
   late IO.Socket socket; // will be initialized in onInit
   late Timer timer; // will be initialized in onInit
