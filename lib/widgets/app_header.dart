@@ -1,6 +1,9 @@
+import 'package:botapp/controllers/auth_controller.dart';
+import 'package:botapp/controllers/speech_controller.dart';
 import 'package:botapp/widgets/logout_button.dart';
 import 'package:flutter/material.dart';
 import 'package:battery_indicator/battery_indicator.dart';
+import 'package:get/get.dart';
 
 class AppHeader extends StatelessWidget {
   final Widget child;
@@ -17,7 +20,7 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    final SpeechController speechController = Get.find<SpeechController>();
     final widthRatio = hasLogOut ? 1 : 0.5;
     return Container(
       height: size.height,
@@ -27,6 +30,15 @@ class AppHeader extends StatelessWidget {
           alignment: AlignmentDirectional.center,
           children: [
             child,
+            Get.find<AuthController>().isLoggedIn.value
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        padding: EdgeInsets.all(20),
+                        child:
+                            Obx(() => Text(speechController.lastWords.value))),
+                  )
+                : Container(),
             Positioned(
               top: 0,
               right: 20,

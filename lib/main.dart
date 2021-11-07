@@ -9,6 +9,7 @@ import 'package:wakelock/wakelock.dart';
 import 'constants.dart';
 import 'controllers/audio_controller.dart';
 import 'controllers/bindings/initial_binding.dart';
+import 'controllers/speech_controller.dart';
 import 'controllers/user_controller.dart';
 import 'models/user.dart';
 import 'screens/CaregiverHomePage/caregiver_home_page.dart';
@@ -55,6 +56,7 @@ class AuthenticationWrapper extends GetWidget<AuthController> {
     Size size = MediaQuery.of(context).size;
     return Obx(() {
       var userController = Get.find<UserController>();
+      Get.find<SpeechController>();
       if (Get.find<AuthController>().isLoggedIn.value) {
         if (userController.currentUser.value == User.nullUser) {
           userController.fetchUser();

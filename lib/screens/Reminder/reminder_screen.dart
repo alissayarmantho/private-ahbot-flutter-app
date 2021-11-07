@@ -127,7 +127,9 @@ class CallNotificationButtons extends StatelessWidget {
                         color: Color.fromRGBO(14, 206, 125, 1), width: 5),
                     padding:
                         EdgeInsets.symmetric(vertical: 20, horizontal: 40)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.back();
+                },
                 child:
                     Icon(Icons.call, color: Color.fromRGBO(111, 207, 151, 1))),
           ),
@@ -145,7 +147,9 @@ class CallNotificationButtons extends StatelessWidget {
                         color: Color.fromRGBO(250, 60, 112, 1), width: 5),
                     padding:
                         EdgeInsets.symmetric(vertical: 20, horizontal: 40)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.back();
+                },
                 child: Icon(Icons.call_end,
                     color: Color.fromRGBO(250, 60, 112, 0.7))),
           ),
