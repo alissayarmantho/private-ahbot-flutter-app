@@ -13,7 +13,7 @@ class SecondaryButton extends StatelessWidget {
     required this.text,
     required this.press,
     required this.widthRatio,
-    this.height = 80,
+    this.height = 65,
     this.color = Colors.transparent,
     this.borderColor = kPrimaryColor,
     this.textColor = kPrimaryColor,
