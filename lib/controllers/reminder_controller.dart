@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class ReminderController extends GetxController {
   var reminderList = List<Reminder>.from([]).obs;
+  var activeReminder = Reminder.nullReminder.obs;
   var elderId = "".obs;
   var isLoading = false.obs;
 
@@ -24,6 +25,26 @@ class ReminderController extends GetxController {
       }).catchError((err) {
         Get.snackbar(
           "Error Getting All Reminders",
+          err,
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+      });
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  void fetchReminder({required String id}) async {
+    isLoading(true);
+
+    try {
+      await ReminderService.fetchReminder(id: id).then((res) {
+        activeReminder.value = res;
+      }).catchError((err) {
+        Get.snackbar(
+          "Error Getting Reminder",
           err,
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,

@@ -35,6 +35,20 @@ class Reminder {
   DateTime startDate;
   DateTime endDate;
 
+  static final nullReminder = Reminder(
+      description: "",
+      title: "",
+      elderId: "",
+      reminderType: "",
+      status: "",
+      recurringCode: "",
+      isRecurring: false,
+      recurringType: "",
+      id: "",
+      eventEndTime: DateTime.now(),
+      eventStartTime: DateTime.now(),
+      startDate: DateTime.now(),
+      endDate: DateTime.now());
   factory Reminder.fromRawJson(String str) =>
       Reminder.fromJson(json.decode(str));
 

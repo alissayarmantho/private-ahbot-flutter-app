@@ -27,6 +27,24 @@ class ReminderService {
     }
   }
 
+  // Fetching reminder by id
+  static Future<Reminder> fetchReminder({required String id}) async {
+    String url = base_api + reminderUrl + "/reminder-by-id?reminderId=" + id;
+    try {
+      var response = await BaseApi.get(url: url);
+      var jsonString = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return Reminder.fromJson(
+          jsonString['data'],
+        );
+      } else {
+        return Future.error(jsonString['msg']);
+      }
+    } catch (e) {
+      return Future.error("Fail getting a reminder");
+    }
+  }
+
   static Future<String> createReminder({
     required title,
     required description,
