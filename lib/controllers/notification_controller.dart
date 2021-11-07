@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:botapp/screens/Reminder/robot_related_notification_screen.dart';
 import 'package:botapp/services/api_constants.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -28,8 +29,8 @@ class NotificationController extends GetxController {
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) => action());
   }
 
-  void setElderId({required String setElderId}) {
-    elderId.value = setElderId;
+  void setElderId({required String newElderId}) {
+    elderId.value = newElderId;
   }
 
   Future<void> initSocket() async {
@@ -115,16 +116,45 @@ class NotificationController extends GetxController {
   void action() {
     if (messageList.length > 0) {
       int newLastIndexValue = messageList.length - 1;
+      // Theoretically if it hits this if statement, the message should be
+      // either from the robot or server
       if (lastIndex.value != newLastIndexValue) {
         lastIndex.value = newLastIndexValue;
         NotificationMessage lastMessage = messageList[lastIndex.value];
-        sendMessage(
-          elderId: lastMessage.elderId,
-          eventType: lastMessage.eventType,
-          actionTrigger: lastMessage.actionTrigger,
-          status: 'ok',
-          sender: 'tablet',
-        );
+        switch (lastMessage.eventType) {
+          case "info":
+            {
+              switch (lastMessage.actionTrigger) {
+                case "lifted":
+                  {
+                    Get.to(() => RobotRelatedNotificationScreen(
+                        text: "Oops, please put me down on the table!"));
+                  }
+                  break;
+                case "putDown":
+                  {}
+                  break;
+              }
+            }
+            break;
+          case "goToCharger":
+            {
+              Get.to(() => () => RobotRelatedNotificationScreen(
+                  text: "Unreachable Charging Station!"));
+            }
+            break;
+          case "goToElder":
+            {}
+            break;
+        }
+        if (lastMessage.sender == 'server' || lastMessage.sender == 'robot')
+          sendMessage(
+            elderId: lastMessage.elderId,
+            eventType: lastMessage.eventType,
+            actionTrigger: lastMessage.actionTrigger,
+            status: 'ok',
+            sender: 'tablet',
+          );
       }
     }
     if (isSendGoToCharger.value && !isGoToChargerAck.value) {

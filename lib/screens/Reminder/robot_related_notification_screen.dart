@@ -4,8 +4,10 @@ import 'package:botapp/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LiftUpScreen extends StatelessWidget {
-  const LiftUpScreen({Key? key}) : super(key: key);
+class RobotRelatedNotificationScreen extends StatelessWidget {
+  final String text;
+  const RobotRelatedNotificationScreen({Key? key, required this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class LiftUpScreen extends StatelessWidget {
                   ]),
               padding: EdgeInsets.fromLTRB(40, 40, 40, 40),
               child: Text(
-                "Oops, please put me down on the table!",
+                text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25,

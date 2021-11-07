@@ -1,4 +1,5 @@
 import 'package:botapp/controllers/auth_controller.dart';
+import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/controllers/speech_controller.dart';
 import 'package:botapp/widgets/logout_button.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ class AppHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final SpeechController speechController = Get.find<SpeechController>();
+    final NotificationController notificationController =
+        Get.find<NotificationController>();
     final widthRatio = hasLogOut ? 1 : 0.5;
     return Container(
       height: size.height,

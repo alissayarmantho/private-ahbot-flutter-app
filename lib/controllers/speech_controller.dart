@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:botapp/controllers/audio_controller.dart';
 import 'package:botapp/controllers/auth_controller.dart';
+import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
@@ -173,6 +174,26 @@ class SpeechController extends GetxController {
           {
             Get.back();
             Get.to(() => RobotHomePage());
+          }
+          break;
+
+        case 'ahbot come here':
+        case 'ah bot come here':
+        case 'abot come here':
+        case 'bot come here':
+        case 'robot come here':
+          {
+            Get.find<NotificationController>().goToElder();
+          }
+          break;
+
+        case 'robot go home':
+        case 'ahbot go home':
+        case 'bot go home':
+        case 'abot go home':
+        case 'ah bot go home':
+          {
+            Get.find<NotificationController>().goToCharger();
           }
           break;
       }

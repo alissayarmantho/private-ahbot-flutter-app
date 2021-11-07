@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:botapp/controllers/auth_controller.dart';
+import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,43 +51,86 @@ class BotApp extends StatelessWidget {
   }
 }
 
-class AuthenticationWrapper extends GetWidget<AuthController> {
-  const AuthenticationWrapper({Key? key}) : super(key: key);
+class AuthenticationWrapper extends StatefulWidget {
+  @override
+  _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
+}
+
+class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeTimer();
+  }
+
+  void _goToCharger() {
+    if (Get.find<AuthController>()
+        .isLoggedIn
+        .value) if (Get.find<UserController>()
+            .currentUser
+            .value
+            .accountType !=
+        "caregiver") Get.find<NotificationController>().goToCharger();
+  }
+
+  void _initializeTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = Timer(const Duration(minutes: 5), _goToCharger);
+  }
+
+  void _handleUserInteraction([_]) {
+    _initializeTimer();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Obx(() {
-      var userController = Get.find<UserController>();
-      Get.find<SpeechController>();
-      if (Get.find<AuthController>().isLoggedIn.value) {
-        if (userController.currentUser.value == User.nullUser) {
-          userController.fetchUser();
-          // To always get a new AudioPlayer after logging in
-          Get.find<AudioController>().setCurrPlayer(AudioPlayer());
-          // initialize the listener to listen to the AudioPlayer added
-          Get.find<AudioController>()
-              .initializeListeningAfterSettingCurrPlayer();
-        }
-        if (!userController.isLoading.value) {
-          User currentUser = userController.currentUser.value;
-          if (currentUser.accountType == "caregiver") {
-            return CaregiverHomePage();
-          } else {
-            return RobotHomePage();
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: _handleUserInteraction,
+      onPanDown: _handleUserInteraction,
+      child: Obx(() {
+        var userController = Get.find<UserController>();
+        // Just to initialise speech and notification controller
+        Get.find<SpeechController>();
+        Get.find<NotificationController>();
+        if (Get.find<AuthController>().isLoggedIn.value) {
+          if (userController.currentUser.value == User.nullUser) {
+            userController.fetchUser();
+            // To always get a new AudioPlayer after logging in
+            Get.find<AudioController>().setCurrPlayer(AudioPlayer());
+            // initialize the listener to listen to the AudioPlayer added
+            Get.find<AudioController>()
+                .initializeListeningAfterSettingCurrPlayer();
           }
+          if (!userController.isLoading.value) {
+            User currentUser = userController.currentUser.value;
+            if (currentUser.accountType == "caregiver") {
+              return CaregiverHomePage();
+            } else {
+              // only when the user is elderly will there be notifications and
+              // speech recognition
+              Get.find<NotificationController>()
+                  .setElderId(newElderId: currentUser.id);
+              return RobotHomePage();
+            }
+          }
+          return Container(
+            width: size.width,
+            height: size.height,
+            color: Colors.white,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          return LaunchScreen();
         }
-        return Container(
-          width: size.width,
-          height: size.height,
-          color: Colors.white,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      } else {
-        return LaunchScreen();
-      }
-    });
+      }),
+    );
   }
 }
