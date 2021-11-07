@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:botapp/controllers/reminder_controller.dart';
+import 'package:botapp/models/reminder.dart';
+import 'package:botapp/screens/Reminder/reminder_screen.dart';
 import 'package:botapp/screens/Reminder/robot_related_notification_screen.dart';
 import 'package:botapp/services/api_constants.dart';
 import 'package:get/get.dart';
@@ -22,6 +25,9 @@ class NotificationController extends GetxController {
   var isReceivingCallAck = false.obs;
 
   var currentNotificationBeingShown = "".obs;
+
+  final ReminderController reminderController =
+      Get.put<ReminderController>(ReminderController());
 
   @override
   void onInit() {
@@ -154,7 +160,24 @@ class NotificationController extends GetxController {
             }
             break;
           case "goToElder":
-            {}
+            {
+              if (lastMessage.notificationId != null) {
+                reminderController.fetchReminder(
+                    // At this point notificationId should not be null.. so it
+                    // should not be ""
+                    id: lastMessage.notificationId ?? "");
+                if (!reminderController.isLoading.value) {
+                  Reminder reminder = reminderController.activeReminder.value;
+                  Get.to(() => ReminderScreen(
+                      isCall: false,
+                      isPrompt: false,
+                      // Should probably truncate this
+                      // TODO: truncate this
+                      text: reminder.title,
+                      reminderId: reminder.id));
+                }
+              }
+            }
             break;
         }
         if (lastMessage.sender == 'server' || lastMessage.sender == 'robot')
