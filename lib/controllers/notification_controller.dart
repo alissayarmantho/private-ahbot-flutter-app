@@ -18,6 +18,7 @@ class NotificationController extends GetxController {
   var isSendGoToCharger = false.obs;
   var isGoToChargerAck = false.obs;
   var isSendReceivingCall = false.obs;
+  var hasPutDown = false.obs;
   var isReceivingCallAck = false.obs;
 
   var currentNotificationBeingShown = "".obs;
@@ -118,6 +119,9 @@ class NotificationController extends GetxController {
       int newLastIndexValue = messageList.length - 1;
       // Theoretically if it hits this if statement, the message should be
       // either from the robot or server
+
+      // I'm not entirely sure whether robot's reply to my goToCharger
+      // and goToElder is in the messageList. If it is, this will be buggy
       if (lastIndex.value != newLastIndexValue) {
         lastIndex.value = newLastIndexValue;
         NotificationMessage lastMessage = messageList[lastIndex.value];
@@ -127,12 +131,18 @@ class NotificationController extends GetxController {
               switch (lastMessage.actionTrigger) {
                 case "lifted":
                   {
+                    hasPutDown.value = false;
                     Get.to(() => RobotRelatedNotificationScreen(
                         text: "Oops, please put me down on the table!"));
                   }
                   break;
                 case "putDown":
-                  {}
+                  {
+                    // Currently the done in the notification is not pegged
+                    // to this reply
+                    // TODO: Fix this
+                    hasPutDown.value = true;
+                  }
                   break;
               }
             }
