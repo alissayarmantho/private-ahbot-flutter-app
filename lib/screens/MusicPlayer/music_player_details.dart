@@ -47,9 +47,7 @@ class MusicPlayerDetails extends StatelessWidget {
                                 image: NetworkImage(
                                   audioController.currMusicPicPath.value == ""
                                       ? "https://i.ibb.co/5jrXNLV/musicdefaultimg.png"
-                                      : audioController
-                                              .currMusicPicPath.value ??
-                                          "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
+                                      : audioController.currMusicPicPath.value,
                                 ),
                                 fit: BoxFit.contain),
                           ),
