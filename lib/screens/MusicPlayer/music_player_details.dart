@@ -6,6 +6,10 @@ import 'package:botapp/widgets/svg_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// Note this music playing will do weird things when the caregiver deletes songs
+// while the elderly is playing the song
+
+// TODO: Find out exactly what it does and fix it
 class MusicPlayerDetails extends StatelessWidget {
   final int currentIndex;
 
@@ -35,26 +39,21 @@ class MusicPlayerDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Center(
-                    child: Container(
-                      width: size.width * 0.4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30.0),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              audioController.musicList[currentIndex]
-                                              .musicPicPath ==
-                                          null ||
-                                      audioController.musicList[currentIndex]
-                                              .musicPicPath ==
-                                          ""
-                                  ? "https://i.ibb.co/5jrXNLV/musicdefaultimg.png"
-                                  : audioController.musicList[currentIndex]
-                                          .musicPicPath ??
-                                      "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
-                            ),
-                            fit: BoxFit.contain),
-                      ),
-                    ),
+                    child: Obx(() => Container(
+                          width: size.width * 0.4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                  audioController.currMusicPicPath.value == ""
+                                      ? "https://i.ibb.co/5jrXNLV/musicdefaultimg.png"
+                                      : audioController
+                                              .currMusicPicPath.value ??
+                                          "https://i.ibb.co/5jrXNLV/musicdefaultimg.png",
+                                ),
+                                fit: BoxFit.contain),
+                          ),
+                        )),
                   ),
                   SizedBox(
                     width: 30,

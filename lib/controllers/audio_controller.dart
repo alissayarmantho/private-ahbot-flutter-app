@@ -4,10 +4,6 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioController extends GetxController {
-  // This will play audio after u back. And unfortunately when you go
-  // to another tile, it will play the audio again, causing overlapping audio
-  // TODO: Fix this
-
   // Ideally we can use the playlist feature of this library, but I am not sure why
   // I think the initialization didn't work
   // TODO: Find out why
@@ -17,6 +13,7 @@ class AudioController extends GetxController {
   var musicList = List<Media>.from([]).obs;
   var currIndex = 0.obs;
   var currTitle = "".obs;
+  var currMusicPicPath = "".obs;
 
   var currPosition = new Duration().obs;
   var currBuffered = new Duration().obs;
@@ -108,6 +105,7 @@ class AudioController extends GetxController {
     currIndex.value = value;
     initCurrPlayer(musicList[currIndex.value].link);
     currTitle.value = musicList[currIndex.value].title;
+    currMusicPicPath.value = musicList[currIndex.value].musicPicPath ?? "";
   }
 
   String getNextSongTitle() {
