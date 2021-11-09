@@ -104,8 +104,10 @@ class ContactController extends GetxController implements Filterable {
 
   void filterByName({required String name}) {
     if (name == "") filteredContactList.value = contactList;
-    filteredContactList.value =
-        contactList.where((contact) => contact.name.contains(name)).toList();
+    filteredContactList.value = contactList
+        .where((contact) =>
+            contact.name.toLowerCase().contains(name.toLowerCase()))
+        .toList();
   }
 
   void multiDeleteContact(
