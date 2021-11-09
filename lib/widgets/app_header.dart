@@ -22,8 +22,6 @@ class AppHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final SpeechController speechController = Get.find<SpeechController>();
-    final NotificationController notificationController =
-        Get.find<NotificationController>();
     final widthRatio = hasLogOut ? 1 : 0.5;
     return Container(
       height: size.height,
