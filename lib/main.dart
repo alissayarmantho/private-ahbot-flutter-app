@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:botapp/controllers/auth_controller.dart';
+import 'package:botapp/controllers/media_controller.dart';
 import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:wakelock/wakelock.dart';
 import 'constants.dart';
 import 'controllers/audio_controller.dart';
 import 'controllers/bindings/initial_binding.dart';
+import 'controllers/contact_controller.dart';
 import 'controllers/speech_controller.dart';
 import 'controllers/user_controller.dart';
 import 'models/user.dart';
@@ -98,6 +100,8 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         // Just to initialise speech and notification controller
         Get.find<SpeechController>();
         Get.find<NotificationController>();
+        Get.find<MediaController>();
+        Get.find<ContactController>();
         if (Get.find<AuthController>().isLoggedIn.value) {
           if (userController.currentUser.value == User.nullUser) {
             userController.fetchUser();

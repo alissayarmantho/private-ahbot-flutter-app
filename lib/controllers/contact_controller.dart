@@ -75,11 +75,12 @@ class ContactController extends GetxController implements Filterable {
     }
   }
 
-  void deleteContact({required String id}) async {
+  void deleteContact({required String id, required String elderId}) async {
     isLoading(true);
 
     try {
       await ContactService.deleteContact(id: id).then((res) {
+        fetchAllContacts(elderId: elderId);
         Get.snackbar(
           "Success",
           "Successfully deleted contact",
@@ -107,11 +108,13 @@ class ContactController extends GetxController implements Filterable {
         contactList.where((contact) => contact.name.contains(name)).toList();
   }
 
-  void multiDeleteContact({required List<String> id}) async {
+  void multiDeleteContact(
+      {required List<String> id, required String elderId}) async {
     isLoading(true);
 
     try {
       await ContactService.multiDeleteContact(id: id).then((res) {
+        fetchAllContacts(elderId: elderId);
         Get.snackbar(
           res,
           "Successfully deleted all contacts",

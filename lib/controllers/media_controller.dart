@@ -78,11 +78,15 @@ class MediaController extends GetxController {
     }
   }
 
-  void deleteMedia({required String id}) async {
+  void deleteMedia(
+      {required String id,
+      required String elderId,
+      required String mediaType}) async {
     isLoading(true);
 
     try {
       await MediaService.deleteMedia(id: id).then((res) {
+        fetchAllMedia(mediaType: mediaType, elderId: elderId);
         Get.snackbar(
           "Success",
           "Successfully deleted media",
@@ -104,11 +108,15 @@ class MediaController extends GetxController {
     }
   }
 
-  void multiDeleteMedia({required List<String> id}) async {
+  void multiDeleteMedia(
+      {required List<String> id, required String elderId}) async {
     isLoading(true);
 
     try {
       await MediaService.multiDeleteMedia(id: id).then((res) {
+        fetchAllMedia(mediaType: "music", elderId: elderId);
+        fetchAllMedia(mediaType: "picture", elderId: elderId);
+        fetchAllMedia(mediaType: "video", elderId: elderId);
         Get.snackbar(
           res,
           "Successfully deleted all media",

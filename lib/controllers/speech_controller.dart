@@ -7,11 +7,8 @@ import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
-import 'package:botapp/screens/MusicPlayer/music_player_details.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -125,7 +122,6 @@ class SpeechController extends GetxController {
         case 'show photo':
         case 'show random photo':
           {
-            Get.back();
             Get.to(() => GalleryScreen());
           }
           break;
@@ -143,7 +139,6 @@ class SpeechController extends GetxController {
         case 'contacts':
         case 'contact':
           {
-            Get.back();
             Get.to(() => ContactScreen());
           }
           break;
@@ -155,7 +150,6 @@ class SpeechController extends GetxController {
         case 'listen to music':
         case 'music':
           {
-            Get.back();
             Get.to(() => MusicPlayerScreen());
           }
           break;
@@ -172,7 +166,6 @@ class SpeechController extends GetxController {
         case 'go back home':
         case 'homepage':
           {
-            Get.back();
             Get.to(() => RobotHomePage());
           }
           break;

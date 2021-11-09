@@ -81,7 +81,7 @@ class MediaService {
   }
 
   static Future<String> deleteMedia({required String id}) async {
-    String url = base_api + mediaUrl + "mediaId=" + id;
+    String url = base_api + mediaUrl + "?mediaId=" + id;
 
     try {
       var response = await BaseApi.delete(url: url);
@@ -99,8 +99,7 @@ class MediaService {
   static Future<String> multiDeleteMedia({required List<String> id}) async {
     int length = id.length;
     for (var id in id) {
-      var url = base_api + mediaUrl + "mediaId=" + id;
-
+      var url = base_api + mediaUrl + "?mediaId=" + id;
       try {
         var response = await BaseApi.delete(url: url);
         var jsonString = jsonDecode(response.body);

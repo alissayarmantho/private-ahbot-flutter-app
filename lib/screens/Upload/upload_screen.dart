@@ -18,10 +18,9 @@ class UploadScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final UploadController uploadController = Get.put(UploadController());
-    final MediaController mediaController = Get.put(MediaController());
+    final MediaController mediaController = Get.find<MediaController>();
     final UserController userController = Get.find<UserController>();
     final User currentUser = userController.currentUser.value;
-    userController.fetchElders();
     return Scaffold(
       body: AppHeader(
         key: UniqueKey(),
@@ -51,89 +50,102 @@ class UploadScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      CustomIconButton(
-                          key: UniqueKey(),
-                          svgAssetPath: 'assets/icons/music.svg',
-                          hasTitle: false,
-                          hasDescription: true,
-                          description: "Songs",
-                          press: () async {
-                            uploadController.setPickingType(FileType.audio);
-                            await uploadController.pickFiles().then((res) => {
-                                  if (res != null)
-                                    {
-                                      mediaController.uploadMedia(
-                                          mediaType: "music",
-                                          elderId: currentUser.elderIds.length >
-                                                  0
-                                              ? currentUser.elderIds[0]
-                                              // This will trigger an error as there is
-                                              // no elder linked to the current caregiver
-                                              // Currently it will default to uploading music
-                                              // for potato
-                                              : "61547e49adbc3d0023ab129c",
-                                          // substring to remove the file
-                                          // extension from the title
-                                          title: res.name.substring(
-                                              0, res.name.length - 4),
-                                          // for music, description is not used (for now)
-                                          description: res.name.substring(
-                                              0, res.name.length - 4),
-                                          file: res)
-                                    }
-                                });
-                          }),
-                      CustomIconButton(
-                          key: UniqueKey(),
-                          hasTitle: false,
-                          hasDescription: true,
-                          description: "Photos and Videos",
-                          svgAssetPath: 'assets/icons/photos.svg',
-                          press: () async {
-                            uploadController.setPickingType(FileType.image);
-                            await uploadController.pickFiles().then((res) => {
-                                  if (res != null)
-                                    {
-                                      mediaController.uploadMedia(
-                                          mediaType: "picture",
-                                          elderId: currentUser.elderIds.length >
-                                                  0
-                                              ? currentUser.elderIds[0]
-                                              // This will trigger an error as
-                                              // there is
-                                              // no elder linked to the current
-                                              // caregiver. Currently it will
-                                              // default to uploading picture
-                                              // for potato
-                                              : "61547e49adbc3d0023ab129c",
-                                          title: res.name.substring(
-                                              0, res.name.length - 4),
-                                          description: "This is great !!!",
-                                          file: res)
-                                    }
-                                });
-                          }),
-                      CustomIconButton(
-                        key: UniqueKey(),
-                        hasTitle: false,
-                        hasDescription: true,
-                        description: "Contacts",
-                        svgAssetPath: 'assets/icons/contact.svg',
-                        press: () {
-                          Get.to(() => CreateContactScreen());
-                        },
+                      Obx(
+                        () => CustomIconButton(
+                            isLoading: uploadController.isLoading.value,
+                            key: UniqueKey(),
+                            svgAssetPath: 'assets/icons/music.svg',
+                            hasTitle: false,
+                            hasDescription: true,
+                            description: "Songs",
+                            press: () async {
+                              uploadController.setPickingType(FileType.audio);
+                              await uploadController.pickFiles().then((res) => {
+                                    if (res != null)
+                                      {
+                                        mediaController.uploadMedia(
+                                            mediaType: "music",
+                                            elderId: currentUser
+                                                        .elderIds.length >
+                                                    0
+                                                ? currentUser.elderIds[0]
+                                                // This will trigger an error as there is
+                                                // no elder linked to the current caregiver
+                                                // Currently it will default to uploading music
+                                                // for potato
+                                                : "61547e49adbc3d0023ab129c",
+                                            // substring to remove the file
+                                            // extension from the title
+                                            title: res.name.substring(
+                                                0, res.name.length - 4),
+                                            // for music, description is not used (for now)
+                                            description: res.name.substring(
+                                                0, res.name.length - 4),
+                                            file: res)
+                                      }
+                                  });
+                            }),
                       ),
-                      CustomIconButton(
-                        key: UniqueKey(),
-                        color: Color.fromRGBO(250, 60, 112, 0.3),
-                        splashColor: Color.fromRGBO(250, 60, 112, 0.6),
-                        hasTitle: false,
-                        hasDescription: true,
-                        description: "Delete current files",
-                        svgAssetPath: 'assets/icons/trash.svg',
-                        press: () {
-                          Get.to(() => DeleteScreen());
-                        },
+                      Obx(
+                        () => CustomIconButton(
+                            isLoading: uploadController.isLoading.value,
+                            key: UniqueKey(),
+                            hasTitle: false,
+                            hasDescription: true,
+                            description: "Photos and Videos",
+                            svgAssetPath: 'assets/icons/photos.svg',
+                            press: () async {
+                              uploadController.setPickingType(FileType.image);
+                              await uploadController.pickFiles().then((res) => {
+                                    if (res != null)
+                                      {
+                                        mediaController.uploadMedia(
+                                            mediaType: "picture",
+                                            elderId: currentUser
+                                                        .elderIds.length >
+                                                    0
+                                                ? currentUser.elderIds[0]
+                                                // This will trigger an error as
+                                                // there is
+                                                // no elder linked to the current
+                                                // caregiver. Currently it will
+                                                // default to uploading picture
+                                                // for potato
+                                                : "61547e49adbc3d0023ab129c",
+                                            title: res.name.substring(
+                                                0, res.name.length - 4),
+                                            description: "This is great !!!",
+                                            file: res)
+                                      }
+                                  });
+                            }),
+                      ),
+                      Obx(
+                        () => CustomIconButton(
+                          isLoading: uploadController.isLoading.value,
+                          key: UniqueKey(),
+                          hasTitle: false,
+                          hasDescription: true,
+                          description: "Contacts",
+                          svgAssetPath: 'assets/icons/contact.svg',
+                          press: () {
+                            Get.to(() => CreateContactScreen());
+                          },
+                        ),
+                      ),
+                      Obx(
+                        () => CustomIconButton(
+                            key: UniqueKey(),
+                            isLoading: uploadController.isLoading.value,
+                            color: Color.fromRGBO(250, 60, 112, 0.3),
+                            splashColor: Color.fromRGBO(250, 60, 112, 0.6),
+                            hasTitle: false,
+                            hasDescription: true,
+                            description: "Delete current files",
+                            svgAssetPath: 'assets/icons/trash.svg',
+                            press: () {
+                              Get.to(() => DeleteScreen());
+                            }),
                       ),
                     ],
                   ),

@@ -19,6 +19,10 @@ class UserController extends GetxController {
     try {
       await UserService.fetchUser().then((res) {
         currentUser.value = res;
+        if (res.accountType == 'caregiver')
+          fetchElders();
+        else
+          fetchCaregivers();
       }).catchError((err) {
         Get.snackbar(
           "Error Getting User",

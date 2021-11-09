@@ -53,7 +53,7 @@ class ContactService {
   }
 
   static Future<String> deleteContact({required String id}) async {
-    String url = base_api + contactUrl + "contactId=" + id;
+    String url = base_api + contactUrl + "?contactId=" + id;
 
     try {
       var response = await BaseApi.delete(url: url);
@@ -71,7 +71,7 @@ class ContactService {
   static Future<String> multiDeleteContact({required List<String> id}) async {
     int length = id.length;
     for (var id in id) {
-      String url = base_api + contactUrl + "contactId=" + id;
+      String url = base_api + contactUrl + "?contactId=" + id;
 
       try {
         var response = await BaseApi.delete(url: url);

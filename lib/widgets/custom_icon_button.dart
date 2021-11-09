@@ -7,7 +7,7 @@ class CustomIconButton extends StatelessWidget {
   final String svgAssetPath, title, description;
   final VoidCallback press;
   final Color color, splashColor;
-  final bool hasDescription, hasTitle;
+  final bool hasDescription, hasTitle, isLoading;
 
   const CustomIconButton({
     required Key key,
@@ -15,6 +15,7 @@ class CustomIconButton extends StatelessWidget {
     required this.press,
     required this.hasTitle,
     required this.hasDescription,
+    this.isLoading = false,
     this.title = "",
     this.description = "",
     this.color = kPrimaryColor,
@@ -43,48 +44,50 @@ class CustomIconButton extends StatelessWidget {
           bottomRight: Radius.circular(65),
         ),
         splashColor: splashColor,
-        onTap: press,
+        onTap: isLoading ? null : press,
         child: Container(
           width: 0.2 * size.width,
           height: 0.21 * size.width,
           padding: hasTitle || hasDescription
               ? EdgeInsets.fromLTRB(30, 20, 30, 5)
               : EdgeInsets.all(padding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: iconSize,
-                height: iconSize,
-                child: SvgPicture.asset(svgAssetPath),
-              ),
-              if (hasTitle)
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 45,
-                        fontWeight: FontWeight.w800),
-                  ),
-                ),
-              if (hasDescription)
-                SizedBox(
-                  height: hasTitle ? 5 : 15,
-                ),
-              if (hasDescription)
-                Expanded(
-                  child: Text(
-                    description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: iconSize,
+                      height: iconSize,
+                      child: SvgPicture.asset(svgAssetPath),
                     ),
-                  ),
+                    if (hasTitle)
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 45,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    if (hasDescription)
+                      SizedBox(
+                        height: hasTitle ? 5 : 15,
+                      ),
+                    if (hasDescription)
+                      Expanded(
+                        child: Text(
+                          description,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-            ],
-          ),
         ),
       ),
     );
