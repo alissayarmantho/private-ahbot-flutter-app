@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,8 @@ class RobotRelatedNotificationScreen extends StatelessWidget {
       'assets/cutefaces/owo.png',
       'assets/cutefaces/uwu.png'
     ];
-
+    final NotificationController notificationController =
+        Get.find<NotificationController>();
     final random = new Random();
     int randomNumber = random.nextInt(7);
     return Container(
@@ -70,16 +72,20 @@ class RobotRelatedNotificationScreen extends StatelessWidget {
             SizedBox(
               height: 0.05 * size.height,
             ),
-            SecondaryButton(
-                text: "Done!",
-                color: Color.fromRGBO(219, 255, 234, 1),
-                borderColor: Color.fromRGBO(14, 206, 125, 1),
-                textColor: Color.fromRGBO(14, 206, 125, 1),
-                key: UniqueKey(),
-                widthRatio: 0.3,
-                press: () {
-                  Get.back();
-                }),
+            Obx(
+              () => notificationController.hasPutDown.value
+                  ? SecondaryButton(
+                      text: "Done!",
+                      color: Color.fromRGBO(219, 255, 234, 1),
+                      borderColor: Color.fromRGBO(14, 206, 125, 1),
+                      textColor: Color.fromRGBO(14, 206, 125, 1),
+                      key: UniqueKey(),
+                      widthRatio: 0.3,
+                      press: () {
+                        Get.back();
+                      })
+                  : Container(), // Else don't show the button to go back
+            ),
           ],
         ),
       ),
