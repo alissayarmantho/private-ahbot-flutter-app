@@ -144,10 +144,10 @@ class NotificationController extends GetxController {
                   break;
                 case "putDown":
                   {
-                    // Currently the done in the notification is not pegged
-                    // to this reply
-                    // TODO: Fix this
                     hasPutDown.value = true;
+                    // It should be fine to put it as forever true after notif
+                    // is dismissed as it will be set to false again
+                    // when the next lifted notif appears
                   }
                   break;
               }
