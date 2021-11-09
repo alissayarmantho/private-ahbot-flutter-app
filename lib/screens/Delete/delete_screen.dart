@@ -59,6 +59,9 @@ class _DeleteScreenState extends State<DeleteScreen>
         hasBackButton: true,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(50, 0, 50, 20),
+          // This is really not the best way of doing this, but
+          // I tried something else before that didn't work
+          // TODO: Refactor this
           child: Obx(() {
             if (mediaController.isLoading.value ||
                 contactController.isLoading.value) {
