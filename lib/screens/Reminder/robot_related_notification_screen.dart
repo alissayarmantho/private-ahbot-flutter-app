@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 
 class RobotRelatedNotificationScreen extends StatelessWidget {
   final String text;
-  const RobotRelatedNotificationScreen({Key? key, required this.text})
+  final String type;
+  const RobotRelatedNotificationScreen(
+      {Key? key, required this.text, this.type = ""})
       : super(key: key);
 
   @override
@@ -82,6 +84,9 @@ class RobotRelatedNotificationScreen extends StatelessWidget {
                       key: UniqueKey(),
                       widthRatio: 0.3,
                       press: () {
+                        if (type == "unreachableStation") {
+                          notificationController.goToCharger();
+                        }
                         Get.back();
                       })
                   : Container(), // Else don't show the button to go back

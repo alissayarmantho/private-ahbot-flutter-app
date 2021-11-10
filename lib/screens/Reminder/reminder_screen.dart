@@ -5,6 +5,7 @@ import 'package:botapp/controllers/reminder_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
+import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
 import 'package:botapp/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -77,6 +78,7 @@ class ReminderScreen extends StatelessWidget {
                 text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontSize: 25,
                   decoration: TextDecoration.none,
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.normal,
@@ -203,7 +205,15 @@ class NotificationPromptButtons extends StatelessWidget {
                       // So that the back button will be to the original page
                       // and not to the notif page
                       Get.back();
-                      Get.to(() => ContactScreen());
+                      Get.back();
+                      Get.back();
+                      // 3 times because that's the max stack you can have when on
+                      // the robot side of the app this is a hack done widely in the codebase
+                      // to avoid dirty state rendering and error
+                      // TODO: Find a way to fix this
+                      Future.delayed(Duration(seconds: 1), () {
+                        Get.to(() => ContactScreen());
+                      });
                     }
                     break;
                   case "gallery":
@@ -211,7 +221,15 @@ class NotificationPromptButtons extends StatelessWidget {
                       // So that the back button will be to the original page
                       // and not to the notif page
                       Get.back();
-                      Get.to(() => GalleryScreen());
+                      Get.back();
+                      Get.back();
+                      // 3 times because that's the max stack you can have when on
+                      // the robot side of the app this is a hack done widely in the codebase
+                      // to avoid dirty state rendering and error
+                      // TODO: Find a way to fix this
+                      Future.delayed(Duration(seconds: 1), () {
+                        Get.to(() => GalleryScreen());
+                      });
                     }
                     break;
                   case "music":
@@ -219,7 +237,15 @@ class NotificationPromptButtons extends StatelessWidget {
                       // So that the back button will be to the original page
                       // and not to the notif page
                       Get.back();
-                      Get.to(() => MusicPlayerScreen());
+                      Get.back();
+                      Get.back();
+                      // 3 times because that's the max stack you can have when on
+                      // the robot side of the app this is a hack done widely in the codebase
+                      // to avoid dirty state rendering and error
+                      // TODO: Find a way to fix this
+                      Future.delayed(Duration(seconds: 1), () {
+                        Get.to(() => MusicPlayerScreen());
+                      });
                     }
                     break;
                   default:

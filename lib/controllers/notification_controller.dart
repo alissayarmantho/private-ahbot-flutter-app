@@ -17,6 +17,8 @@ class NotificationController extends GetxController {
   late Timer timer; // will be initialized in onInit
   var messageList = List<NotificationMessage>.from([]).obs;
   var elderId = "".obs; // this tablet will be bound to one elderId
+  // and also if it is a caregiver account, this will be set to ""
+  // and so it will not receive any message as no elderId should be ""
   var lastIndex = 0.obs;
   var isSendGoToCharger = false.obs;
   var isGoToChargerAck = false.obs;
@@ -98,11 +100,29 @@ class NotificationController extends GetxController {
                 newMessage.notificationId ?? "";
           }
         }
+        messageList.add(newMessage);
 
-        if (newMessage.sender != 'robot' &&
-            newMessage.actionTrigger != 'reminder' &&
-            newMessage.eventType != 'goToElder') {
-          messageList.add(newMessage);
+        // Removing the acknowledgement message from the list as it is already
+        // acknowledged from above
+        if (newMessage.sender == 'robot' &&
+            newMessage.actionTrigger == 'reminder' &&
+            newMessage.eventType == 'goToElder') {
+          // remove message if it is a reminder completion from the robot
+          messageList.remove(newMessage);
+        }
+
+        if (newMessage.sender == 'robot' &&
+            newMessage.actionTrigger == 'call' &&
+            newMessage.eventType == 'goToElder') {
+          // remove message if it is a goToElder completion from the robot
+          messageList.remove(newMessage);
+        }
+
+        if (newMessage.sender == 'robot' &&
+            newMessage.actionTrigger == 'completion' &&
+            newMessage.eventType == 'goToCharger') {
+          // remove message if it is a goToCharger completion from the robot
+          messageList.remove(newMessage);
         }
       }
     });
@@ -139,7 +159,7 @@ class NotificationController extends GetxController {
                   {
                     hasPutDown.value = false;
                     Get.to(() => RobotRelatedNotificationScreen(
-                        text: "Oops, please put me down on the table!"));
+                        text: "Oops, please put me down on my home!"));
                   }
                   break;
                 case "putDown":
@@ -155,8 +175,20 @@ class NotificationController extends GetxController {
             break;
           case "goToCharger":
             {
-              Get.to(() => () => RobotRelatedNotificationScreen(
-                  text: "Unreachable Charging Station!"));
+              switch (lastMessage.actionTrigger) {
+                case "unreachableStation":
+                  {
+                    Get.to(() => RobotRelatedNotificationScreen(
+                          text: "I can't reach my home...,please clear a way!",
+                          type: "unreachableStation",
+                        ));
+                    hasPutDown.value = true; // to show the done button
+                  }
+                  break;
+                default:
+                  {}
+                  break;
+              }
             }
             break;
           case "goToElder":
@@ -171,9 +203,9 @@ class NotificationController extends GetxController {
                   Get.to(() => ReminderScreen(
                       isCall: false,
                       isPrompt: false,
-                      // Should probably truncate this
-                      // TODO: truncate this
-                      text: reminder.title,
+                      text: reminder.title.length > 50
+                          ? reminder.title.substring(0, 50) + "..."
+                          : reminder.title,
                       reminderId: reminder.id));
                 }
               }

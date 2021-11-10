@@ -23,17 +23,21 @@ class SpeechController extends GetxController {
   var lastWords = ''.obs;
   var lastError = ''.obs;
   var lastStatus = ''.obs;
+  var hasCommand = false.obs;
   String _currentLocaleId = '';
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
   final random = new Random();
   late Timer timer;
+  late Timer activityTimer;
 
   @override
   void onInit() async {
     super.onInit();
     initSpeechState();
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) => startListening());
+    activityTimer = Timer.periodic(Duration(seconds: 30),
+        (Timer t) => {if (hasCommand.value) hasCommand.value = false});
   }
 
   Future<void> initSpeechState() async {
@@ -122,7 +126,17 @@ class SpeechController extends GetxController {
         case 'show photo':
         case 'show random photo':
           {
-            Get.to(() => GalleryScreen());
+            hasCommand.value = true;
+            Get.back();
+            Get.back();
+            Get.back();
+            // 3 times because that's the max stack you can have when on
+            // the robot side of the app this is a hack done widely in the codebase
+            // to avoid dirty state rendering and error
+            // TODO: Find a way to fix this
+            Future.delayed(Duration(seconds: 1), () {
+              Get.to(() => GalleryScreen());
+            });
           }
           break;
         case 'open contact':
@@ -139,7 +153,17 @@ class SpeechController extends GetxController {
         case 'contacts':
         case 'contact':
           {
-            Get.to(() => ContactScreen());
+            hasCommand.value = true;
+            Get.back();
+            Get.back();
+            Get.back();
+            // 3 times because that's the max stack you can have when on
+            // the robot side of the app this is a hack done widely in the codebase
+            // to avoid dirty state rendering and error
+            // TODO: Find a way to fix this
+            Future.delayed(Duration(seconds: 1), () {
+              Get.to(() => ContactScreen());
+            });
           }
           break;
         case 'play music':
@@ -150,13 +174,24 @@ class SpeechController extends GetxController {
         case 'listen to music':
         case 'music':
           {
-            Get.to(() => MusicPlayerScreen());
+            hasCommand.value = true;
+            Get.back();
+            Get.back();
+            Get.back();
+            // 3 times because that's the max stack you can have when on
+            // the robot side of the app this is a hack done widely in the codebase
+            // to avoid dirty state rendering and error
+            // TODO: Find a way to fix this
+            Future.delayed(Duration(seconds: 1), () {
+              Get.to(() => MusicPlayerScreen());
+            });
           }
           break;
 
         case 'back':
         case 'go back':
           {
+            hasCommand.value = true;
             Get.back();
           }
           break;
@@ -166,6 +201,7 @@ class SpeechController extends GetxController {
         case 'go back home':
         case 'homepage':
           {
+            hasCommand.value = true;
             Get.to(() => RobotHomePage());
           }
           break;
@@ -176,6 +212,7 @@ class SpeechController extends GetxController {
         case 'bot come here':
         case 'robot come here':
           {
+            hasCommand.value = true;
             Get.find<NotificationController>().goToElder();
           }
           break;
@@ -186,6 +223,7 @@ class SpeechController extends GetxController {
         case 'abot go home':
         case 'ah bot go home':
           {
+            hasCommand.value = true;
             Get.find<NotificationController>().goToCharger();
           }
           break;

@@ -1,9 +1,16 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:botapp/controllers/auth_controller.dart';
 import 'package:botapp/controllers/media_controller.dart';
 import 'package:botapp/controllers/notification_controller.dart';
+import 'package:botapp/screens/Contact/contact_screen.dart';
+import 'package:botapp/screens/Gallery/gallery_screen.dart';
+import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
+import 'package:botapp/screens/Reminder/reminder_screen.dart';
+import 'package:botapp/screens/ReminderList/reminder_list_screen.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
+import 'package:botapp/screens/Upload/upload_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -37,6 +44,17 @@ class BotApp extends StatelessWidget {
       title: 'Ahbot App',
       debugShowCheckedModeBanner: false,
       initialBinding: InitialBinding(),
+      getPages: [
+        // I should be using this named vers if I want to do a pop until named
+        // TODO: Use named pages routing way
+        GetPage(name: '/robot-home', page: () => RobotHomePage()),
+        GetPage(name: '/caregiver-home', page: () => CaregiverHomePage()),
+        GetPage(name: '/gallery', page: () => GalleryScreen()),
+        GetPage(name: '/music', page: () => MusicPlayerScreen()),
+        GetPage(name: "/contact", page: () => ContactScreen()),
+        GetPage(name: '/upload', page: () => UploadScreen()),
+        GetPage(name: '/reminder-list', page: () => ReminderListScreen()),
+      ],
       theme: ThemeData(
           fontFamily: 'Montserrat',
           textTheme: Theme.of(context).textTheme.apply(
@@ -60,45 +78,95 @@ class AuthenticationWrapper extends StatefulWidget {
 
 class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   Timer? _timer;
+  Timer? _promptTimer;
 
+  late Random random;
   @override
   void initState() {
     super.initState();
+    random = new Random();
     _initializeTimer();
+    _initializePromptTimer();
   }
 
   void _goToCharger() {
+    // The check to prevent caregiver accounts from sending goToCharger req
+    // is here. Notification Controller does no check on whether the request is
+    // coming from elder acc or caregiver acc
     if (Get.find<AuthController>()
         .isLoggedIn
         .value) if (Get.find<UserController>()
             .currentUser
             .value
             .accountType !=
-        "caregiver") Get.find<NotificationController>().goToCharger();
+        "caregiver") {
+      _handleUserInteraction();
+      Get.find<NotificationController>().goToCharger();
+    }
+  }
+
+  void _sendPrompt() {
+    // The check to prevent caregiver accounts from sending goToCharger req
+    // is here. Notification Controller does no check on whether the request is
+    // coming from elder acc or caregiver acc
+    if (Get.find<AuthController>()
+        .isLoggedIn
+        .value) if (Get.find<UserController>()
+            .currentUser
+            .value
+            .accountType !=
+        "caregiver") {
+      int randomNumber = random.nextInt(3);
+      String sendingPromptType = promptType[randomNumber];
+      _handleUserInteraction();
+      Get.to(
+        () => ReminderScreen(
+          text: promptText[randomNumber],
+          isPrompt: true,
+          isCall: false,
+          promptType: sendingPromptType,
+        ),
+      );
+    }
   }
 
   void _initializeTimer() {
     if (_timer != null) {
       _timer!.cancel();
     }
-    _timer = Timer(const Duration(minutes: 5), _goToCharger);
+    _timer = Timer(const Duration(minutes: 10), _goToCharger);
+  }
+
+  void _initializePromptTimer() {
+    if (_promptTimer != null) {
+      _promptTimer!.cancel();
+    }
+    _promptTimer = Timer(const Duration(minutes: 5), _sendPrompt);
   }
 
   void _handleUserInteraction([_]) {
+    print("handling user interaction");
     _initializeTimer();
+    _initializePromptTimer();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    // Idling is currently only when the user is in the homepage and doesn't click
+    // or do voice commands (other pages don't check for idle)
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: _handleUserInteraction,
       onPanDown: _handleUserInteraction,
       child: Obx(() {
         var userController = Get.find<UserController>();
-        // Just to initialise speech and notification controller
-        Get.find<SpeechController>();
+
+        var speechController = Get.find<SpeechController>();
+        if (speechController.hasCommand.value) {
+          _handleUserInteraction();
+        }
+        // Just to initialise all controllers
         Get.find<NotificationController>();
         Get.find<MediaController>();
         Get.find<ContactController>();
