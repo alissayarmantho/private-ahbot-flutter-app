@@ -5,33 +5,29 @@ import 'package:botapp/controllers/reminder_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
-import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
 import 'package:botapp/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReminderScreen extends StatelessWidget {
   final String text;
-  final String reminderId;
+  final ReminderController? reminderController;
   final String promptType; // contact, gallery, music
   final bool isPrompt;
   final bool isCall;
-  const ReminderScreen(
-      {Key? key,
-      required this.text,
-      required this.isPrompt,
-      required this.isCall,
-      // This shouldn't be called unless this screen is a prompt screen
-      this.promptType = "",
-      // This shouldn't be called unless this screen is a notification screen
-      this.reminderId = ""})
-      : super(key: key);
+  const ReminderScreen({
+    Key? key,
+    required this.text,
+    required this.isPrompt,
+    required this.isCall,
+    this.reminderController,
+    // This shouldn't be called unless this screen is a prompt screen
+    this.promptType = "",
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final reminderController =
-        Get.put<ReminderController>(ReminderController());
     final imagePaths = [
       'assets/cutefaces/blush.png',
       'assets/cutefaces/excited.png',
@@ -44,61 +40,101 @@ class ReminderScreen extends StatelessWidget {
 
     final random = new Random();
     int randomNumber = random.nextInt(7);
-    return Center(
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 0.4 * size.width,
-              height: 0.4 * size.height,
-              child: Image.asset(
-                imagePaths[randomNumber],
-              ),
-            ),
-            SizedBox(
-              height: 0.05 * size.height,
-            ),
-            Container(
-              width: size.width * 0.75,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Color.fromRGBO(224, 243, 255, 1),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(4, 7), // changes position of shadow
-                    ),
-                  ]),
-              padding: EdgeInsets.fromLTRB(40, 40, 40, 40),
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25,
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.normal,
-                  fontStyle: FontStyle.normal,
-                  color: Colors.black,
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 0.4 * size.width,
+                height: 0.4 * size.height,
+                child: Image.asset(
+                  imagePaths[randomNumber],
                 ),
               ),
-            ),
-            SizedBox(
-              height: 0.05 * size.height,
-            ),
-            if (isCall)
-              CallNotificationButtons()
-            else
-              NotificationPromptButtons(
-                isPrompt: isPrompt,
-                promptType: promptType,
-                reminderController: reminderController,
-              )
-          ],
+              SizedBox(
+                height: 0.05 * size.height,
+              ),
+              Container(
+                width: size.width * 0.75,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Color.fromRGBO(224, 243, 255, 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(4, 7), // changes position of shadow
+                      ),
+                    ]),
+                padding: EdgeInsets.fromLTRB(40, 40, 40, 40),
+                child: isPrompt || isCall
+                    ? Text(text,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25,
+                          decoration: TextDecoration.none,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal,
+                          color: Colors.black,
+                        ))
+                    : Obx(
+                        () => Text(
+                            reminderController!.isLoading.value
+                                ? "Fetching reminder..."
+                                : reminderController!
+                                            .activeReminder.value.title.length >
+                                        50
+                                    ? reminderController!
+                                            .activeReminder.value.title
+                                            .substring(0, 50) +
+                                        "..."
+                                    : reminderController!
+                                        .activeReminder.value.title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 25,
+                              decoration: TextDecoration.none,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FontStyle.normal,
+                              color: Colors.black,
+                            )),
+                      ),
+              ),
+              SizedBox(
+                height: 0.05 * size.height,
+              ),
+              if (isCall)
+                CallNotificationButtons()
+              else
+                !isPrompt
+                    ? Obx(
+                        () => reminderController!.isLoading.value
+                            ? Expanded(
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : NotificationPromptButtons(
+                                isPrompt: isPrompt,
+                                promptType: promptType,
+                                reminderId:
+                                    reminderController!.activeReminder.value.id,
+                                reminderController: reminderController,
+                              ),
+                      )
+                    : NotificationPromptButtons(
+                        isPrompt: isPrompt,
+                        promptType: promptType,
+                        reminderController: reminderController,
+                      ),
+            ],
+          ),
         ),
       ),
     );
@@ -162,12 +198,12 @@ class CallNotificationButtons extends StatelessWidget {
 }
 
 class NotificationPromptButtons extends StatelessWidget {
-  final ReminderController reminderController;
+  final ReminderController? reminderController;
   final String reminderId;
   final String promptType;
   const NotificationPromptButtons({
     Key? key,
-    required this.reminderController,
+    this.reminderController,
     this.reminderId = "",
     this.promptType = "",
     required this.isPrompt,
@@ -195,7 +231,9 @@ class NotificationPromptButtons extends StatelessWidget {
             widthRatio: 0.3,
             press: () {
               if (!isPrompt) {
-                reminderController.updateReminderStatus(
+                // if not a prompt, this should be a reminder so reminderController
+                // shouldn't be null
+                reminderController!.updateReminderStatus(
                     reminderId: reminderId, status: 'completed');
                 Get.back();
               } else {
@@ -271,7 +309,9 @@ class NotificationPromptButtons extends StatelessWidget {
             press: () {
               if (!isPrompt) {
                 // I assume missed as don't need
-                reminderController.updateReminderStatus(
+                // if not a prompt, this should be a reminder so reminderController
+                // shouldn't be null
+                reminderController!.updateReminderStatus(
                     reminderId: reminderId, status: 'missed');
                 Get.back();
               } else {

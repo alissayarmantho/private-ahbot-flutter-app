@@ -146,8 +146,6 @@ class NotificationController extends GetxController {
       // Theoretically if it hits this if statement, the message should be
       // either from the robot or server
 
-      // I'm not entirely sure whether robot's reply to my goToCharger
-      // and goToElder is in the messageList. If it is, this will be buggy
       if (lastIndex.value != newLastIndexValue) {
         lastIndex.value = newLastIndexValue;
         NotificationMessage lastMessage = messageList[lastIndex.value];
@@ -198,16 +196,12 @@ class NotificationController extends GetxController {
                     // At this point notificationId should not be null.. so it
                     // should not be ""
                     id: lastMessage.notificationId ?? "");
-                if (!reminderController.isLoading.value) {
-                  Reminder reminder = reminderController.activeReminder.value;
-                  Get.to(() => ReminderScreen(
-                      isCall: false,
-                      isPrompt: false,
-                      text: reminder.title.length > 50
-                          ? reminder.title.substring(0, 50) + "..."
-                          : reminder.title,
-                      reminderId: reminder.id));
-                }
+
+                Get.to(() => ReminderScreen(
+                    isCall: false,
+                    isPrompt: false,
+                    text: "",
+                    reminderController: reminderController));
               }
             }
             break;
