@@ -1,4 +1,5 @@
 import 'package:botapp/controllers/auth_controller.dart';
+import 'package:botapp/controllers/registration_controller.dart';
 import 'package:botapp/models/auth.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:botapp/widgets/primary_button.dart';
@@ -151,9 +152,7 @@ class RegistrationScreen extends GetWidget<AuthController> {
                             ),
                             Obx(
                               () => DropdownButton(
-                                value: Get.find<RegistrationController>()
-                                    .selected
-                                    .value,
+                                value: regController.selected.value,
                                 icon: Icon(Icons.keyboard_arrow_down),
                                 items: accountType.map((String items) {
                                   return DropdownMenuItem(
@@ -202,14 +201,5 @@ class RegistrationScreen extends GetWidget<AuthController> {
         ),
       ),
     );
-  }
-}
-
-class RegistrationController extends GetxController {
-  // It is mandatory initialize with one value from the list
-  var selected = "caregiver".obs;
-
-  void setSelected(String value) {
-    selected.value = value;
   }
 }
