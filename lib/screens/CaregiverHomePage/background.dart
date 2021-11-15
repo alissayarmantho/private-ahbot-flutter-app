@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:botapp/constants.dart';
+import 'package:botapp/models/reminder.dart';
 import 'package:botapp/screens/ReminderList/reminder_list_screen.dart';
 import 'package:botapp/screens/Upload/upload_screen.dart';
 import 'package:botapp/widgets/app_header.dart';
@@ -11,9 +12,13 @@ import 'package:intl/intl.dart';
 
 class Background extends StatelessWidget {
   final Widget child;
+  final bool isLoadingReminder;
+  final List<Reminder> reminderList;
   const Background({
     required key,
     required this.child,
+    required this.reminderList,
+    this.isLoadingReminder = false,
   }) : super(key: key);
 
   @override
@@ -81,15 +86,20 @@ class Background extends StatelessWidget {
                       text: "Notifications",
                       color: Colors.white60,
                       key: UniqueKey(),
+                      isLoading: isLoadingReminder,
                       widthRatio: 0.3,
+                      height: 80,
                       press: () {
-                        Get.to(() => ReminderListScreen());
+                        Get.to(() => ReminderListScreen(
+                              reminderList: reminderList,
+                            ));
                       }),
                   SecondaryButton(
                       text: "Upload",
                       key: UniqueKey(),
                       color: Colors.white60,
                       widthRatio: 0.25,
+                      height: 80,
                       press: () {
                         Get.to(() => UploadScreen());
                       }),

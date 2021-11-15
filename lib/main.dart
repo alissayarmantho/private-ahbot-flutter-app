@@ -53,7 +53,6 @@ class BotApp extends StatelessWidget {
         GetPage(name: '/music', page: () => MusicPlayerScreen()),
         GetPage(name: "/contact", page: () => ContactScreen()),
         GetPage(name: '/upload', page: () => UploadScreen()),
-        GetPage(name: '/reminder-list', page: () => ReminderListScreen()),
       ],
       theme: ThemeData(
           fontFamily: 'Montserrat',

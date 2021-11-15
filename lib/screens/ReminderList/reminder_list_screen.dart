@@ -1,7 +1,5 @@
 import 'package:botapp/constants.dart';
-import 'package:botapp/controllers/reminder_controller.dart';
-import 'package:botapp/controllers/user_controller.dart';
-import 'package:botapp/models/user.dart';
+import 'package:botapp/models/reminder.dart';
 import 'package:botapp/screens/ReminderAdd/reminder_add_screen.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:botapp/widgets/zero_result.dart';
@@ -9,24 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReminderListScreen extends StatelessWidget {
-  const ReminderListScreen({Key? key}) : super(key: key);
+  final List<Reminder> reminderList;
+  const ReminderListScreen({Key? key, required this.reminderList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    User currentUser = Get.find<UserController>().currentUser.value;
-    // Assume that elderId is inherited from upload screen that had just fetched
-    // it
-    var elderId = currentUser.elderIds.length > 0
-        ? currentUser.elderIds[0]
-        // This will trigger an error as there is
-        // no elder linked to the current caregiver
-        // Currently it will default to uploading music
-        // for potato
-        : "61547e49adbc3d0023ab129c";
-    final ReminderController reminderController =
-        Get.put<ReminderController>(ReminderController());
-    reminderController.fetchAllReminders(elderId: elderId);
+
     return Scaffold(
       body: AppHeader(
         key: UniqueKey(),
@@ -71,28 +59,20 @@ class ReminderListScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Obx(
-              () => reminderController.isLoading.value
-                  ? Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : reminderController.reminderList.length == 0
-                      ? Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 0.05 * size.height,
-                              ),
-                              ZeroResult(
-                                  text: "There is no upcoming notifications...")
-                            ],
-                          ),
-                        )
-                      : Container(),
-            ),
+            reminderList.length == 0
+                ? Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 0.05 * size.height,
+                        ),
+                        ZeroResult(
+                            text: "There is no upcoming notifications...")
+                      ],
+                    ),
+                  )
+                : Container(child: Text("Hello")),
           ],
         ),
       ),

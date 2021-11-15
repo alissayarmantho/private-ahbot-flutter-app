@@ -5,6 +5,7 @@ class SecondaryButton extends StatelessWidget {
   final String text;
   final VoidCallback press;
   final Color color, borderColor, textColor;
+  final bool isLoading;
   final double widthRatio;
   final double height;
 
@@ -13,6 +14,7 @@ class SecondaryButton extends StatelessWidget {
     required this.text,
     required this.press,
     required this.widthRatio,
+    this.isLoading = false,
     this.height = 65,
     this.color = Colors.transparent,
     this.borderColor = kPrimaryColor,
@@ -34,12 +36,14 @@ class SecondaryButton extends StatelessWidget {
               backgroundColor: color,
               side: BorderSide(color: borderColor, width: 5),
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)),
-          onPressed: press,
-          child: Text(
-            text,
-            style: TextStyle(color: textColor),
-            textAlign: TextAlign.center,
-          ),
+          onPressed: isLoading ? null : press,
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Text(
+                  text,
+                  style: TextStyle(color: textColor),
+                  textAlign: TextAlign.center,
+                ),
         ),
       ),
     );
