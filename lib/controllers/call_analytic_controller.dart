@@ -2,13 +2,13 @@ import 'package:botapp/controllers/analytics_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class MediaAnalyticController extends GetxController {
+class CallAnalyticController extends GetxController {
   final AnalyticController analyticController = AnalyticController();
   final DateFormat dateFormat = DateFormat('y-M-d H:m:s');
-  final String mediaType;
   late final DateTime startTime;
-  MediaAnalyticController({required this.mediaType});
+  final String callType;
 
+  CallAnalyticController({required this.callType});
   @override
   void onInit() {
     startTime = DateTime.now();
@@ -17,8 +17,8 @@ class MediaAnalyticController extends GetxController {
 
   @override
   void onClose() {
-    analyticController.createMediaLog(
-        mediaType: mediaType,
+    analyticController.createCallLog(
+        callType: callType,
         startTime: dateFormat.format(startTime),
         endTime: dateFormat.format(DateTime.now()));
     super.dispose();

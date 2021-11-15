@@ -66,10 +66,10 @@ class Reminder {
         recurringCode: json["recurringCode"],
         recurringType: json["recurringType"],
         id: json["_id"],
-        eventStartTime: DateFormat('yyyy-M-d Hm').parse(json["eventStartTime"]),
-        eventEndTime: DateFormat('yyyy-M-d Hm').parse(json["eventEndTime"]),
-        startDate: DateFormat('yyyy-M-d').parse(json["startDate"]),
-        endDate: DateFormat('yyyy-M-d').parse(json["endDate"]),
+        eventStartTime: DateFormat('y-M-d H:m').parse(json["eventStartTime"]),
+        eventEndTime: DateFormat('y-M-d H:m').parse(json["eventEndTime"]),
+        startDate: DateFormat('y-M-d').parse(json["startDate"]),
+        endDate: DateFormat('y-M-d').parse(json["endDate"]),
       );
 
   Map<String, dynamic> toJson() => {

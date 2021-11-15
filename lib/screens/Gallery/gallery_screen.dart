@@ -14,6 +14,7 @@ class GalleryScreen extends StatelessWidget {
     final User currentUser = Get.find<UserController>().currentUser.value;
 
     final MediaController mediaController = Get.find<MediaController>();
+
     mediaController.fetchAllMedia(
         mediaType: "picture", elderId: currentUser.id);
     return Scaffold(

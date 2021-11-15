@@ -6,12 +6,14 @@ class SVGButton extends StatelessWidget {
   final String svgAssetPath;
   final VoidCallback press;
   final double size;
+  final bool isLoading;
   final Color color, splashColor;
 
   const SVGButton({
     required Key key,
     required this.svgAssetPath,
     required this.press,
+    this.isLoading = false,
     // Button size cannot be 0, so 0 will cause the svg to go to its default size
     this.size = 0,
     this.color = kPrimaryColor,
@@ -26,12 +28,22 @@ class SVGButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         splashColor: splashColor,
-        onTap: press,
-        child: SizedBox(
-          width: size == 0 ? null : size,
-          height: size == 0 ? null : size,
-          child: SvgPicture.asset(svgAssetPath),
-        ),
+        onTap: isLoading ? null : press,
+        child: isLoading
+            ? SizedBox(
+                width: size == 0 ? null : size,
+                height: size == 0 ? null : size,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : SizedBox(
+                width: size == 0 ? null : size,
+                height: size == 0 ? null : size,
+                child: SvgPicture.asset(svgAssetPath),
+              ),
       ),
     );
   }

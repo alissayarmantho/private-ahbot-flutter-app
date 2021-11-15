@@ -1,3 +1,4 @@
+import 'package:botapp/controllers/media_analytic_controller.dart';
 import 'package:botapp/models/media.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -13,8 +14,11 @@ class GalleryDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final galleryDetailController = Get.put<GalleryDetailController>(
-        GalleryDetailController(index: currentIndex));
+    final GalleryDetailController galleryDetailController =
+        Get.put<GalleryDetailController>(
+            GalleryDetailController(index: currentIndex));
+    Get.put<MediaAnalyticController>(MediaAnalyticController(
+        mediaType: "picture")); // for now only support pictures
     final List<Widget> imageSliders = imgList
         .map((item) => Container(
               child: Container(

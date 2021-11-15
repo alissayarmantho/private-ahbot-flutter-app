@@ -1,4 +1,5 @@
 import 'package:botapp/constants.dart';
+import 'package:botapp/controllers/call_analytic_controller.dart';
 import 'package:botapp/controllers/contact_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
 import 'package:botapp/models/user.dart';
@@ -22,6 +23,8 @@ class ContactScreen extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final ContactController contactController =
         Get.put<ContactController>(ContactController());
+    Get.put<CallAnalyticController>(CallAnalyticController(
+        callType: "voice")); // currently only supports voice call
     contactController.fetchAllContacts(elderId: currentUser.id);
     return Scaffold(
       resizeToAvoidBottomInset: false,

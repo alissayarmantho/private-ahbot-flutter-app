@@ -1,6 +1,7 @@
 import 'package:botapp/constants.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:botapp/controllers/audio_controller.dart';
+import 'package:botapp/controllers/media_analytic_controller.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:botapp/widgets/svg_button.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,9 @@ class MusicPlayerDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioController = Get.find<AudioController>();
+    final AudioController audioController = Get.find<AudioController>();
+    Get.put<MediaAnalyticController>(
+        MediaAnalyticController(mediaType: "music"));
     if (audioController.currIndex.value != currentIndex ||
         !audioController.isPlaying.value) {
       audioController.setCurrIndex(currentIndex);
@@ -91,13 +94,17 @@ class MusicPlayerDetails extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SVGButton(
-                              key: UniqueKey(),
-                              size: 100,
-                              svgAssetPath: 'assets/icons/prev_song.svg',
-                              press: () {
-                                audioController.prevCurrPlayerSong();
-                              },
+                            Obx(
+                              () => SVGButton(
+                                key: UniqueKey(),
+                                color: Color.fromRGBO(86, 204, 242, 1),
+                                size: 100,
+                                isLoading: audioController.isLoading.value,
+                                svgAssetPath: 'assets/icons/prev_song.svg',
+                                press: () {
+                                  audioController.prevCurrPlayerSong();
+                                },
+                              ),
                             ),
                             SizedBox(
                               width: 30,
@@ -143,13 +150,17 @@ class MusicPlayerDetails extends StatelessWidget {
                             SizedBox(
                               width: 30,
                             ),
-                            SVGButton(
-                              key: UniqueKey(),
-                              size: 100,
-                              svgAssetPath: 'assets/icons/next_song.svg',
-                              press: () {
-                                audioController.nextCurrPlayerSong();
-                              },
+                            Obx(
+                              () => SVGButton(
+                                key: UniqueKey(),
+                                color: Color.fromRGBO(86, 204, 242, 1),
+                                isLoading: audioController.isLoading.value,
+                                size: 100,
+                                svgAssetPath: 'assets/icons/next_song.svg',
+                                press: () {
+                                  audioController.nextCurrPlayerSong();
+                                },
+                              ),
                             ),
                           ],
                         ),
