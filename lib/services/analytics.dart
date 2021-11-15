@@ -11,7 +11,7 @@ class AnalyticService {
 
   static Future<List<MediaLog>> fetchAllMediaLogs(
       {required String elderId}) async {
-    String url = base_api + analyticUrl + "/all/medialog";
+    String url = base_api + analyticUrl + "/all/medialog?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -29,7 +29,7 @@ class AnalyticService {
 
   static Future<List<CallLog>> fetchAllCallLogs(
       {required String elderId}) async {
-    String url = base_api + analyticUrl + "/all/calllog";
+    String url = base_api + analyticUrl + "/all/calllog?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -46,7 +46,7 @@ class AnalyticService {
   }
 
   static Future<List<int>> getCallQuantity({required String elderId}) async {
-    String url = base_api + analyticUrl + "/call-quantity";
+    String url = base_api + analyticUrl + "/call-quantity?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -65,7 +65,8 @@ class AnalyticService {
   }
 
   static Future<List<int>> getCallDuration({required String elderId}) async {
-    String url = base_api + analyticUrl + "/call-duration-stats";
+    String url =
+        base_api + analyticUrl + "/call-duration-stats?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -85,7 +86,8 @@ class AnalyticService {
 
   static Future<List<int>> getAppointmentStats(
       {required String elderId}) async {
-    String url = base_api + analyticUrl + "/appointment-stats";
+    String url =
+        base_api + analyticUrl + "/appointment-stats?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -104,7 +106,8 @@ class AnalyticService {
   }
 
   static Future<List<int>> getMedicationStats({required String elderId}) async {
-    String url = base_api + analyticUrl + "/medication-stats";
+    String url =
+        base_api + analyticUrl + "/medication-stats?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -123,7 +126,8 @@ class AnalyticService {
   }
 
   static Future<int> getMusicActivityDuration({required String elderId}) async {
-    String url = base_api + analyticUrl + "/music-activity-duration";
+    String url =
+        base_api + analyticUrl + "/music-activity-duration?elderId=" + elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);
@@ -143,7 +147,9 @@ class AnalyticService {
     String url = base_api +
         analyticUrl +
         "/media-activity-duration?mediaType=" +
-        mediaType;
+        mediaType +
+        "&elderId=" +
+        elderId;
     try {
       var response = await BaseApi.get(url: url);
       var jsonString = jsonDecode(response.body);

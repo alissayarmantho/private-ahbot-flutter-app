@@ -52,7 +52,7 @@ class CustomIconButton extends StatelessWidget {
               ? EdgeInsets.fromLTRB(30, 20, 30, 5)
               : EdgeInsets.all(padding),
           child: isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator(color: Colors.white))
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
