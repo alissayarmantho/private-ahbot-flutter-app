@@ -78,7 +78,6 @@ class AuthenticationWrapper extends StatefulWidget {
 
 class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   Timer? _timer;
-  Timer? _promptTimer;
 
   late Random random;
   @override
@@ -86,7 +85,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     super.initState();
     random = new Random();
     _initializeTimer();
-    _initializePromptTimer();
   }
 
   void _goToCharger() {
@@ -119,6 +117,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       int randomNumber = random.nextInt(3);
       String sendingPromptType = promptType[randomNumber];
       _handleUserInteraction();
+      Timer(const Duration(minutes: 5), _goToCharger);
       Get.to(
         () => ReminderScreen(
           text: promptText[randomNumber],
@@ -134,20 +133,12 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     if (_timer != null) {
       _timer!.cancel();
     }
-    _timer = Timer(const Duration(minutes: 10), _goToCharger);
-  }
-
-  void _initializePromptTimer() {
-    if (_promptTimer != null) {
-      _promptTimer!.cancel();
-    }
-    _promptTimer = Timer(const Duration(minutes: 15), _sendPrompt);
+    _timer = Timer(const Duration(minutes: 5), _sendPrompt);
   }
 
   void _handleUserInteraction([_]) {
     print("handling user interaction");
     _initializeTimer();
-    _initializePromptTimer();
   }
 
   @override
