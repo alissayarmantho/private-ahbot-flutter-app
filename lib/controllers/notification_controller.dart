@@ -233,6 +233,9 @@ class NotificationController extends GetxController {
         actionTrigger: 'completion',
         status: 'request',
         sender: 'tablet');
+    // Not sure if this will cause double sending when robot doesn't respond
+    // and it goes to the second idle loop already
+    // TODO: Check if this works, otherwise just wrap in if else
     sendMessage(
       elderId: newMessage.elderId,
       eventType: newMessage.eventType,
