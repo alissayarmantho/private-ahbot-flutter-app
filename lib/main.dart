@@ -141,7 +141,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     if (_promptTimer != null) {
       _promptTimer!.cancel();
     }
-    _promptTimer = Timer(const Duration(minutes: 5), _sendPrompt);
+    _promptTimer = Timer(const Duration(minutes: 15), _sendPrompt);
   }
 
   void _handleUserInteraction([_]) {

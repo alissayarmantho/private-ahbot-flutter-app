@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class Reminder {
   Reminder({
     required this.title,
@@ -64,10 +66,10 @@ class Reminder {
         recurringCode: json["recurringCode"],
         recurringType: json["recurringType"],
         id: json["_id"],
-        eventStartTime: DateTime.parse(json["eventStartTime"]),
-        eventEndTime: DateTime.parse(json["eventEndTime"]),
-        startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
+        eventStartTime: DateFormat('yyyy-M-d Hm').parse(json["eventStartTime"]),
+        eventEndTime: DateFormat('yyyy-M-d Hm').parse(json["eventEndTime"]),
+        startDate: DateFormat('yyyy-M-d').parse(json["startDate"]),
+        endDate: DateFormat('yyyy-M-d').parse(json["endDate"]),
       );
 
   Map<String, dynamic> toJson() => {

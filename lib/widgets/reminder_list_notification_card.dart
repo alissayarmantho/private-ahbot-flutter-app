@@ -1,11 +1,11 @@
 import 'package:botapp/constants.dart';
 import 'package:flutter/material.dart';
 
-class HomePageNotificationCard extends StatelessWidget {
+class ReminderListNotificationCard extends StatelessWidget {
   final String title, startTime;
   final IconData icon;
   final Color iconColor;
-  const HomePageNotificationCard({
+  const ReminderListNotificationCard({
     Key? key,
     required this.title,
     required this.startTime,

@@ -44,6 +44,7 @@ class ReminderScreen extends StatelessWidget {
       child: Center(
         child: Container(
           color: Colors.white,
+          height: size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
