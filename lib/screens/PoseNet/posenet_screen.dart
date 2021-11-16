@@ -27,7 +27,7 @@ class _PosenetScreenState extends State<PosenetScreen> {
 
   loadModel() async {
     var res = await Tflite.loadModel(
-        model: 'assets/posenet/posenet_mv1_075_float_from_checkpoints.tflite');
+        model: "assets/posenet_mv1_075_float_from_checkpoints.tflite");
     print(res);
   }
 
