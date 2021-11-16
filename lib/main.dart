@@ -38,7 +38,7 @@ class BotApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     Wakelock.enable();
     return GetMaterialApp(
       title: 'Ahbot App',

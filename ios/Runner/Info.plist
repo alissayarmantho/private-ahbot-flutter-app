@@ -27,6 +27,8 @@
 	<string>This app use voice recognition</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app use voice recognition</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app use camera</string>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -8,7 +8,9 @@ import 'package:botapp/controllers/user_controller.dart';
 import 'package:botapp/screens/Contact/contact_screen.dart';
 import 'package:botapp/screens/Gallery/gallery_screen.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
+import 'package:botapp/screens/PoseNet/posenet_screen.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
+import 'package:camera/camera.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -100,7 +102,7 @@ class SpeechController extends GetxController {
 
   /// This callback is invoked each time new recognition results are
   /// available after `listen` is called.
-  void resultListener(SpeechRecognitionResult result) {
+  Future<void> resultListener(SpeechRecognitionResult result) async {
     _logEvent(
         'Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
     lastWords.value = '${result.recognizedWords}';
@@ -225,6 +227,19 @@ class SpeechController extends GetxController {
           {
             hasCommand.value = true;
             Get.find<NotificationController>().goToCharger();
+          }
+          break;
+
+        case "camera":
+          {
+            try {
+              List<CameraDescription> cameras = await availableCameras();
+              Future.delayed(Duration(seconds: 2), () {
+                Get.to(() => PosenetScreen(cameras));
+              });
+            } on CameraException catch (e) {
+              print('Error: $e.code\nError Message: $e.message');
+            }
           }
           break;
       }
