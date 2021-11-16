@@ -115,7 +115,10 @@ class ReminderListScreen extends StatelessWidget {
                       return Container(
                           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                           child: ReminderListNotificationCard(
-                              title: reminderList[index].title,
+                              title: reminderList[index].title.length > 50
+                                  ? reminderList[index].title.substring(0, 50) +
+                                      "..."
+                                  : reminderList[index].title,
                               startTime: DateFormat("hh:mm a")
                                   .format(reminderList[index].eventStartTime),
                               id: reminderList[index].id,
