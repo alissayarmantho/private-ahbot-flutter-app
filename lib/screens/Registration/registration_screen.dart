@@ -177,17 +177,17 @@ class RegistrationScreen extends GetWidget<AuthController> {
                             isLoading: controller.isLoading.value,
                             widthRatio: 1,
                             press: () {
-                              controller.register(
-                                  newAccount: Account(
-                                      id: "",
-                                      firstName: _firstNameController.text,
-                                      lastName: _lastNameController.text,
-                                      email: _emailController.text,
-                                      accountType:
-                                          Get.find<RegistrationController>()
-                                              .selected
-                                              .value),
-                                  password: _passwordController.text);
+                              if (_formKey.currentState!.validate()) {
+                                controller.register(
+                                    newAccount: Account(
+                                        id: "",
+                                        firstName: _firstNameController.text,
+                                        lastName: _lastNameController.text,
+                                        email: _emailController.text,
+                                        accountType:
+                                            regController.selected.value),
+                                    password: _passwordController.text);
+                              }
                             },
                           ),
                         ),

@@ -102,6 +102,7 @@ class ReminderController extends GetxController {
     required reminderType,
     required isRecurring,
     required recurringType,
+    required notifType,
     required eventStartTime,
     required eventEndTime,
     required startDate,
@@ -117,6 +118,7 @@ class ReminderController extends GetxController {
         reminderType: reminderType,
         isRecurring: isRecurring,
         recurringType: recurringType,
+        notifType: notifType,
         eventStartTime: eventStartTime,
         eventEndTime: eventEndTime,
         startDate: startDate,
@@ -130,6 +132,7 @@ class ReminderController extends GetxController {
           duration: Duration(seconds: 1),
           backgroundColor: Colors.green,
         );
+        fetchAllReminders(elderId: elderId);
       }).catchError((err) {
         Get.snackbar(
           "Error Creating Reminder",
@@ -172,7 +175,7 @@ class ReminderController extends GetxController {
     }
   }
 
-  void deleteReminder({required String id}) async {
+  void deleteReminder({required String id, required String elderId}) async {
     isLoading(true);
 
     try {
@@ -184,6 +187,7 @@ class ReminderController extends GetxController {
           colorText: Colors.white,
           backgroundColor: Colors.green,
         );
+        fetchAllReminders(elderId: elderId);
       }).catchError((err) {
         Get.snackbar(
           "Error Deleting Reminder",

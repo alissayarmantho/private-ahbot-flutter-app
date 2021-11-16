@@ -19,6 +19,9 @@ class MusicPlayerDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AudioController audioController = Get.find<AudioController>();
+    // Currently this will logs anytime the person is in this page
+    // Even when the elderly is not actually playing any music
+    // TODO: Make this more accurate (pegged to audio controller isPlaying for example)
     Get.put<MediaAnalyticController>(
         MediaAnalyticController(mediaType: "music"));
     if (audioController.currIndex.value != currentIndex ||

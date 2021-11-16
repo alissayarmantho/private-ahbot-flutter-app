@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class MediaAnalyticController extends GetxController {
   final AnalyticController analyticController = AnalyticController();
-  final DateFormat dateFormat = DateFormat('y-M-d H:m:s');
+  final DateFormat dateFormat = DateFormat('y-MM-dd HH:mm:ss');
   final String mediaType;
   late final DateTime startTime;
   MediaAnalyticController({required this.mediaType});

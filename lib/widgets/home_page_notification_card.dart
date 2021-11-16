@@ -16,7 +16,7 @@ class HomePageNotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
         padding: const EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           color: kPrimaryLightColor,
@@ -29,7 +29,7 @@ class HomePageNotificationCard extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(
               width: 20,

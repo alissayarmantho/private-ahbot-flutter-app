@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:botapp/controllers/analytics_controller.dart';
 import 'package:botapp/controllers/reminder_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
@@ -37,7 +39,18 @@ class CaregiverHomePage extends StatelessWidget {
     analyticController.getMediaActivityDuration(
         elderId: elderId, mediaType: "video");
     analyticController.getCallDuration(elderId: elderId);
+    // This will give a weird double loading sometimes
+    // TODO: Fix this
     reminderController.fetchAllReminders(elderId: elderId);
+    // Start a periodic timer that will fetch and update reminders every 5 minute
+    // As a result, the reminders won't immediately be shown in this page
+    // need to wait 5 mins
+    // It's either that, or not allowing the user to add reminders for today
+    // (eg: force to add reminders for tomorrow)
+    // Another option is to add a refresh button to force refresh this page
+    // TODO: Find a better way to do this
+    Timer.periodic(const Duration(minutes: 5),
+        (Timer t) => reminderController.fetchAllReminders(elderId: elderId));
     return Scaffold(
       body: Obx(
         () => Background(
@@ -181,7 +194,7 @@ class CaregiverHomePage extends StatelessWidget {
                                         break;
                                     }
                                     return HomePageNotificationCard(
-                                      startTime: DateFormat.Hm().format(
+                                      startTime: DateFormat("hh:mm a").format(
                                           reminderController.reminderList[index]
                                               .eventStartTime),
                                       title: reminderController

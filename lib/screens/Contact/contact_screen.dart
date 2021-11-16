@@ -23,6 +23,9 @@ class ContactScreen extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final ContactController contactController =
         Get.put<ContactController>(ContactController());
+    // Currently this will log any time the elderly is in the contact screen page
+    // Even without actually receiving or calling anyone
+    // TODO: Make this listen to actual calls / video calls
     Get.put<CallAnalyticController>(CallAnalyticController(
         callType: "voice")); // currently only supports voice call
     contactController.fetchAllContacts(elderId: currentUser.id);

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class CallAnalyticController extends GetxController {
   final AnalyticController analyticController = AnalyticController();
-  final DateFormat dateFormat = DateFormat('y-M-d H:m:s');
+  final DateFormat dateFormat = DateFormat('y-MM-dd HH:mm:ss');
   late final DateTime startTime;
   final String callType;
 

@@ -16,6 +16,7 @@ class Reminder {
     required this.isRecurring,
     required this.recurringCode,
     required this.recurringType,
+    required this.notifType,
     required this.id,
     required this.eventStartTime,
     required this.eventEndTime,
@@ -31,13 +32,14 @@ class Reminder {
   bool isRecurring;
   String recurringCode;
   String recurringType;
+  String notifType;
   String id;
   DateTime eventStartTime;
   DateTime eventEndTime;
   DateTime startDate;
   DateTime endDate;
 
-  static final nullReminder = Reminder(
+  static final Reminder nullReminder = Reminder(
       description: "",
       title: "",
       elderId: "",
@@ -46,6 +48,7 @@ class Reminder {
       recurringCode: "",
       isRecurring: false,
       recurringType: "",
+      notifType: "",
       id: "",
       eventEndTime: DateTime.now(),
       eventStartTime: DateTime.now(),
@@ -65,11 +68,14 @@ class Reminder {
         isRecurring: json["isRecurring"],
         recurringCode: json["recurringCode"],
         recurringType: json["recurringType"],
+        notifType: json["notifType"],
         id: json["_id"],
-        eventStartTime: DateFormat('y-M-d H:m').parse(json["eventStartTime"]),
-        eventEndTime: DateFormat('y-M-d H:m').parse(json["eventEndTime"]),
-        startDate: DateFormat('y-M-d').parse(json["startDate"]),
-        endDate: DateFormat('y-M-d').parse(json["endDate"]),
+        // Date is given in ISO string
+        // TODO: Ask backend to standardise date sent for post and for get
+        eventStartTime: DateTime.parse(json["eventStartTime"]),
+        eventEndTime: DateTime.parse(json["eventEndTime"]),
+        startDate: DateTime.parse(json["startDate"]),
+        endDate: DateTime.parse(json["endDate"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,6 +88,7 @@ class Reminder {
         "recurringCode": recurringCode,
         "recurringType": recurringType,
         "_id": id,
+        "notifType": notifType,
         "eventStartTime": eventStartTime.toIso8601String(),
         "eventEndTime": eventEndTime.toIso8601String(),
         "startDate": startDate.toIso8601String(),
