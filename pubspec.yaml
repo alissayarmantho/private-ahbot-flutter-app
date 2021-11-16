@@ -53,7 +53,12 @@ dependencies:
   speech_to_text: ^5.1.1
   flutter_slidable: ^1.1.0
   flutter_datetime_picker: ^1.5.1
-  camera: ^0.9.4+4
+  # camera: ^0.9.4+4
+  camera:
+    git:
+      url: https://github.com/camsim99/plugins.git
+      path: packages/camera/camera
+      ref: issue_89578_dev
 
 flutter_icons:
   android: true
@@ -85,6 +90,7 @@ flutter:
     - assets/loginbackground.png
     - assets/sun.png
     - assets/uploadfinished.png
+    - assets/posenet_mv1_075_float_from_checkpoints.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -102,10 +102,12 @@ packages:
   camera:
     dependency: "direct main"
     description:
-      name: camera
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.4+4"
+      path: "packages/camera/camera"
+      ref: issue_89578_dev
+      resolved-ref: "11cc4e1acca3025a507e84a574ab0246576efe95"
+      url: "https://github.com/camsim99/plugins.git"
+    source: git
+    version: "0.9.4+3"
   camera_platform_interface:
     dependency: transitive
     description:

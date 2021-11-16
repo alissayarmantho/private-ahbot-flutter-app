@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:get/get.dart';
 import 'package:tflite/tflite.dart';
 import 'dart:math' as math;
 
@@ -16,20 +17,79 @@ class Camera extends StatefulWidget {
   _CameraState createState() => new _CameraState();
 }
 
-class _CameraState extends State<Camera> {
+class _CameraState extends State<Camera> with WidgetsBindingObserver {
+  T? _ambiguate<T>(T? value) => value;
   late CameraController controller;
   bool isDetecting = false;
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = controller;
+
+    // App state changed before we got the chance to initialize.
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      onNewCameraSelected(cameraController.description);
+    }
+  }
+
+  void onNewCameraSelected(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller!.dispose();
+    }
+
+    final CameraController cameraController =
+        CameraController(cameraDescription, ResolutionPreset.max);
+
+    controller = cameraController;
+
+    // If the controller is updated then update the UI.
+    cameraController.addListener(() {
+      if (mounted) setState(() {});
+      if (cameraController.value.hasError) {
+        Get.snackbar(
+          "Camera Error",
+          'Camera error ${cameraController.value.errorDescription}',
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+      }
+    });
+
+    try {
+      await cameraController.initialize();
+    } on CameraException catch (e) {
+      Get.snackbar(
+        "Camera Controller Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        backgroundColor: Colors.red,
+      );
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   void initState() {
+    _ambiguate(WidgetsBinding.instance)?.addObserver(this);
     super.initState();
 
-    if (widget.cameras.length < 1) {
+    if (widget.cameras.length < 2) {
       print('No camera is found');
     } else {
       controller = new CameraController(
         widget.cameras[1], // select front camera
-        ResolutionPreset.high,
+        ResolutionPreset.max,
       );
       controller.initialize().then((_) {
         if (!mounted) {
@@ -65,6 +125,7 @@ class _CameraState extends State<Camera> {
 
   @override
   void dispose() {
+    _ambiguate(WidgetsBinding.instance)?.removeObserver(this);
     controller?.dispose();
     super.dispose();
   }
