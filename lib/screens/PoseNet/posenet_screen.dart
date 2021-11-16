@@ -18,7 +18,6 @@ class _PosenetScreenState extends State<PosenetScreen> {
   List<dynamic> _recognitions = [];
   int _imageHeight = 0;
   int _imageWidth = 0;
-  String _model = "";
 
   @override
   void initState() {
@@ -53,16 +52,15 @@ class _PosenetScreenState extends State<PosenetScreen> {
           children: [
             Camera(
               widget.cameras,
-              _model,
               setRecognitions,
             ),
             BndBox(
-                _recognitions,
-                math.max(_imageHeight, _imageWidth),
-                math.min(_imageHeight, _imageWidth),
-                screen.height,
-                screen.width,
-                _model),
+              _recognitions,
+              math.max(_imageHeight, _imageWidth),
+              math.min(_imageHeight, _imageWidth),
+              screen.height,
+              screen.width,
+            ),
           ],
         ),
       ),
