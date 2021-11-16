@@ -237,9 +237,9 @@ class ReminderAddScreen extends StatelessWidget {
                                 value: reminderAddController
                                     .recurringTypeSelected.value,
                                 icon: Icon(Icons.keyboard_arrow_down),
-                                items: recurringType.map((String items) {
+                                items: recurringType.map((String item) {
                                   return DropdownMenuItem(
-                                      value: items, child: Text(items));
+                                      value: item, child: Text(item));
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   if (newValue != null) {
@@ -386,9 +386,9 @@ class ReminderAddScreen extends StatelessWidget {
                                 value: reminderAddController
                                     .notifTypeSelected.value,
                                 icon: Icon(Icons.keyboard_arrow_down),
-                                items: notifType.map((String items) {
+                                items: notifType.map((String item) {
                                   return DropdownMenuItem(
-                                      value: items, child: Text(items));
+                                      value: item, child: Text(item));
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   if (newValue != null) {
@@ -409,7 +409,7 @@ class ReminderAddScreen extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                               child: Text(
-                                "Reminder Type",
+                                "Notification Icon",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -418,9 +418,39 @@ class ReminderAddScreen extends StatelessWidget {
                                 value: reminderAddController
                                     .reminderTypeSelected.value,
                                 icon: Icon(Icons.keyboard_arrow_down),
-                                items: reminderType.map((String items) {
+                                items: reminderType.map((String item) {
+                                  IconData icon;
+                                  switch (item) {
+                                    case "appointment":
+                                      {
+                                        icon = Icons.calendar_today;
+                                      }
+                                      break;
+                                    case "birthday":
+                                      {
+                                        icon = Icons.cake;
+                                      }
+                                      break;
+                                    case "call":
+                                      {
+                                        icon = Icons.call;
+                                      }
+                                      break;
+                                    case "medication":
+                                      {
+                                        icon = Icons.medication;
+                                      }
+                                      break;
+                                    case "other":
+                                    default:
+                                      {
+                                        icon = Icons.notifications;
+                                      }
+                                      break;
+                                  }
                                   return DropdownMenuItem(
-                                      value: items, child: Text(items));
+                                      value: item,
+                                      child: Icon(icon, color: kPrimaryColor));
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   if (newValue != null) {
@@ -433,6 +463,11 @@ class ReminderAddScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Text(
+                            "Note: Any new notification created will not be immediately reflected in the app until 5 mins since its creation"),
+                      )
                     ],
                   ),
                 ),

@@ -154,9 +154,9 @@ class RegistrationScreen extends GetWidget<AuthController> {
                               () => DropdownButton(
                                 value: regController.selected.value,
                                 icon: Icon(Icons.keyboard_arrow_down),
-                                items: accountType.map((String items) {
+                                items: accountType.map((String item) {
                                   return DropdownMenuItem(
-                                      value: items, child: Text(items));
+                                      value: item, child: Text(item));
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   if (newValue != null) {
