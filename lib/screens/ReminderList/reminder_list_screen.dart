@@ -80,56 +80,69 @@ class ReminderListScreen extends StatelessWidget {
                       ],
                     ),
                   )
-                : (ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: reminderList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String recurringType;
-                      switch (reminderList[index].recurringType) {
-                        case "day":
-                          {
-                            recurringType = "Daily";
+                : Expanded(
+                    child: (ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: reminderList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String recurringType;
+                          switch (reminderList[index].recurringType) {
+                            case "day":
+                              {
+                                recurringType = "Daily";
+                              }
+                              break;
+                            case "week":
+                              {
+                                recurringType = "Weekly";
+                              }
+                              break;
+                            case "month":
+                              {
+                                recurringType = "Monthly";
+                              }
+                              break;
+                            case "year":
+                              {
+                                recurringType = "Yearly";
+                              }
+                              break;
+                            default:
+                              {
+                                recurringType = "Never";
+                              }
+                              break;
                           }
-                          break;
-                        case "week":
-                          {
-                            recurringType = "Weekly";
-                          }
-                          break;
-                        case "month":
-                          {
-                            recurringType = "Monthly";
-                          }
-                          break;
-                        case "year":
-                          {
-                            recurringType = "Yearly";
-                          }
-                          break;
-                        default:
-                          {
-                            recurringType = "Never";
-                          }
-                          break;
-                      }
-                      return Container(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                          child: ReminderListNotificationCard(
-                              title: reminderList[index].title.length > 50
-                                  ? reminderList[index].title.substring(0, 50) +
-                                      "..."
-                                  : reminderList[index].title,
-                              startTime: DateFormat("hh:mm a")
-                                  .format(reminderList[index].eventStartTime),
-                              id: reminderList[index].id,
-                              elderId: reminderList[index].elderId,
-                              recurringType: recurringType,
-                              isRecurring: reminderList[index].isRecurring,
-                              startDate: DateFormat("dd")
-                                  .format(reminderList[index].eventStartTime),
-                              startMonth: DateFormat("MMM")
-                                  .format(reminderList[index].eventStartTime)));
-                    }))
+                          return Container(
+                              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                              child: ReminderListNotificationCard(
+                                  reminder: reminderList[index],
+                                  hasBeenDeleted:
+                                      reminderList[index].hasBeenDeleted,
+                                  title: reminderList[index].title.length > 50
+                                      ? reminderList[index]
+                                              .title
+                                              .substring(0, 50) +
+                                          "..."
+                                      : reminderList[index].title,
+                                  startTime: DateFormat("hh:mm a").format(
+                                      reminderList[index].eventStartTime),
+                                  id: reminderList[index].id,
+                                  elderId: reminderList[index].elderId,
+                                  recurringType: recurringType,
+                                  isRecurring: reminderList[index].isRecurring,
+                                  startDate: DateFormat("dd").format(
+                                      reminderList[index].eventStartTime),
+                                  startMonth: DateFormat("MMM").format(
+                                      reminderList[index].eventStartTime)));
+                        })),
+                  ),
+            if (reminderList.length != 0)
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Text(
+                    "Note: Any notifications deleted will not be immediately reflected in the app until 5 mins since its deletion"),
+              ),
           ],
         ),
       ),

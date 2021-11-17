@@ -40,11 +40,11 @@ class ReminderScreen extends StatelessWidget {
 
     final random = new Random();
     int randomNumber = random.nextInt(7);
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          color: Colors.white,
-          height: size.height,
+    return Center(
+      child: Container(
+        color: Colors.white,
+        height: size.height,
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

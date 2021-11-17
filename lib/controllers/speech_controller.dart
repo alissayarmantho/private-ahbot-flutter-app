@@ -10,7 +10,6 @@ import 'package:botapp/screens/Gallery/gallery_screen.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
 import 'package:botapp/screens/PoseNet/posenet_screen.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
-import 'package:camera/camera.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -232,14 +231,9 @@ class SpeechController extends GetxController {
 
         case "camera":
           {
-            try {
-              List<CameraDescription> cameras = await availableCameras();
-              Future.delayed(Duration(seconds: 2), () {
-                Get.to(() => PosenetScreen(cameras));
-              });
-            } on CameraException catch (e) {
-              print('Error: $e.code\nError Message: $e.message');
-            }
+            Future.delayed(Duration(seconds: 2), () {
+              Get.to(() => PosenetScreen());
+            });
           }
           break;
       }

@@ -14,6 +14,7 @@ class Reminder {
     required this.reminderType,
     required this.status,
     required this.isRecurring,
+    this.hasBeenDeleted = false,
     required this.recurringCode,
     required this.recurringType,
     required this.notifType,
@@ -29,7 +30,7 @@ class Reminder {
   String elderId;
   String reminderType;
   String status;
-  bool isRecurring;
+  bool isRecurring, hasBeenDeleted;
   String recurringCode;
   String recurringType;
   String notifType;
@@ -38,6 +39,8 @@ class Reminder {
   DateTime eventEndTime;
   DateTime startDate;
   DateTime endDate;
+
+  static final Duration toSGT = Duration(hours: 8);
 
   static final Reminder nullReminder = Reminder(
       description: "",
@@ -72,10 +75,11 @@ class Reminder {
         id: json["_id"],
         // Date is given in ISO string
         // TODO: Ask backend to standardise date sent for post and for get
-        eventStartTime: DateTime.parse(json["eventStartTime"]),
-        eventEndTime: DateTime.parse(json["eventEndTime"]),
-        startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
+        // Change to sgt +8 as the time is given in UTC apparently
+        eventStartTime: DateTime.parse(json["eventStartTime"]).add(toSGT),
+        eventEndTime: DateTime.parse(json["eventEndTime"]).add(toSGT),
+        startDate: DateTime.parse(json["startDate"]).add(toSGT),
+        endDate: DateTime.parse(json["endDate"]).add(toSGT),
       );
 
   Map<String, dynamic> toJson() => {
