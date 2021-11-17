@@ -10,6 +10,7 @@ import 'package:botapp/screens/Gallery/gallery_screen.dart';
 import 'package:botapp/screens/MusicPlayer/music_player_screen.dart';
 import 'package:botapp/screens/PoseNet/posenet_screen.dart';
 import 'package:botapp/screens/RobotHomePage/robot_home_page.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -127,6 +128,10 @@ class SpeechController extends GetxController {
         case 'show photo':
         case 'show random photo':
           {
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft
+            ]);
             hasCommand.value = true;
             Get.back();
             Get.back();
@@ -154,6 +159,10 @@ class SpeechController extends GetxController {
         case 'contacts':
         case 'contact':
           {
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft
+            ]);
             hasCommand.value = true;
             Get.back();
             Get.back();
@@ -175,6 +184,10 @@ class SpeechController extends GetxController {
         case 'listen to music':
         case 'music':
           {
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft
+            ]);
             hasCommand.value = true;
             Get.back();
             Get.back();
@@ -193,6 +206,10 @@ class SpeechController extends GetxController {
         case 'go back':
           {
             hasCommand.value = true;
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft
+            ]);
             Get.back();
           }
           break;
@@ -202,6 +219,10 @@ class SpeechController extends GetxController {
         case 'go back home':
         case 'homepage':
           {
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft
+            ]);
             hasCommand.value = true;
             Get.to(() => RobotHomePage());
           }
