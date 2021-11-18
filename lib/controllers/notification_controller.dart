@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:botapp/controllers/reminder_controller.dart';
-import 'package:botapp/models/reminder.dart';
 import 'package:botapp/screens/Reminder/reminder_screen.dart';
 import 'package:botapp/screens/Reminder/robot_related_notification_screen.dart';
 import 'package:botapp/services/api_constants.dart';

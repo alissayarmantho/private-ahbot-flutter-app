@@ -1,5 +1,4 @@
 import 'package:botapp/controllers/auth_controller.dart';
-import 'package:botapp/controllers/notification_controller.dart';
 import 'package:botapp/controllers/speech_controller.dart';
 import 'package:botapp/widgets/logout_button.dart';
 import 'package:flutter/material.dart';

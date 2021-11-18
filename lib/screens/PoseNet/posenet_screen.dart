@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:botapp/widgets/camera_widgets/bottom_bar.dart';
@@ -25,48 +25,21 @@ class _PosenetScreenState extends State<PosenetScreen>
   ValueNotifier<CameraFlashes> _switchFlash = ValueNotifier(CameraFlashes.NONE);
   ValueNotifier<double> _zoomNotifier = ValueNotifier(0);
   ValueNotifier<Size> _photoSize = ValueNotifier(Size(300, 300));
-  ValueNotifier<Sensors> _sensor = ValueNotifier(Sensors.BACK);
-  ValueNotifier<CaptureModes> _captureMode = ValueNotifier(CaptureModes.PHOTO);
-  ValueNotifier<bool> _enableAudio = ValueNotifier(true);
+  ValueNotifier<Sensors> _sensor = ValueNotifier(Sensors.FRONT);
+  bool isDetecting = false;
+  var counter = 0;
   late final String myImagePath;
 
   List<dynamic> _recognitions = [];
   int _imageHeight = 0;
   int _imageWidth = 0;
 
-  /// list of available sizes
-  late List<Size> _availableSizes;
-
-  late AnimationController _iconsAnimationController,
-      _previewAnimationController;
-  late Animation<Offset> _previewAnimation;
-  // StreamSubscription<Uint8List> previewStreamSub;
-  Stream<Uint8List>? previewStream;
-
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
     loadModel();
     loadStorage();
-    _iconsAnimationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-
-    _previewAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 1300),
-      vsync: this,
-    );
-    _previewAnimation = Tween<Offset>(
-      begin: const Offset(-2.0, 0.0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _previewAnimationController,
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.elasticIn,
-      ),
-    );
   }
 
   loadStorage() async {
@@ -93,33 +66,18 @@ class _PosenetScreenState extends State<PosenetScreen>
 
   @override
   void dispose() {
-    _iconsAnimationController.dispose();
-    _previewAnimationController.dispose();
-    // previewStreamSub.cancel();
+    _switchFlash.dispose();
+    _zoomNotifier.dispose();
     _photoSize.dispose();
-    _captureMode.dispose();
+    _sensor.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // App state changed before we got the chance to initialize.
-    if (_iconsAnimationController == null ||
-        _previewAnimationController == null ||
-        _previewAnimation == null) {
-      return;
-    }
     if (state == AppLifecycleState.inactive) {
       dispose();
-    } else if (state == AppLifecycleState.resumed) {
-      if (_iconsAnimationController != null ||
-          _previewAnimationController == null ||
-          _previewAnimation != null) {
-        dispose();
-        Future.delayed(Duration(seconds: 2), () {
-          initState();
-        });
-      }
     }
   }
 
@@ -130,7 +88,7 @@ class _PosenetScreenState extends State<PosenetScreen>
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          buildFullscreenCamera(screen: screen),
+          buildFullscreenCamera(),
           _buildInterface(),
           BndBox(
             _recognitions,
@@ -141,15 +99,18 @@ class _PosenetScreenState extends State<PosenetScreen>
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: BackButton(
-              color: Colors.white,
-              onPressed: () {
-                SystemChrome.setPreferredOrientations([
-                  DeviceOrientation.landscapeRight,
-                  DeviceOrientation.landscapeLeft
-                ]);
-                Navigator.of(context).pop();
-              },
+            child: Transform.rotate(
+              angle: pi / 2,
+              child: BackButton(
+                color: Colors.white,
+                onPressed: () {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft
+                  ]);
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ),
         ],
@@ -164,32 +125,6 @@ class _PosenetScreenState extends State<PosenetScreen>
           bottom: false,
           child: TopBarWidget(
             key: UniqueKey(),
-            enableAudio: _enableAudio,
-            photoSize: _photoSize,
-            captureMode: _captureMode,
-            switchFlash: _switchFlash,
-            rotationController: _iconsAnimationController,
-            onFlashTap: () {
-              switch (_switchFlash.value) {
-                case CameraFlashes.NONE:
-                  _switchFlash.value = CameraFlashes.ON;
-                  break;
-                case CameraFlashes.ON:
-                  _switchFlash.value = CameraFlashes.AUTO;
-                  break;
-                case CameraFlashes.AUTO:
-                  _switchFlash.value = CameraFlashes.ALWAYS;
-                  break;
-                case CameraFlashes.ALWAYS:
-                  _switchFlash.value = CameraFlashes.NONE;
-                  break;
-              }
-              setState(() {});
-            },
-            onAudioChange: () {
-              this._enableAudio.value = !this._enableAudio.value;
-              setState(() {});
-            },
             onChangeSensorTap: () {
               this._focus = !_focus;
               if (_sensor.value == Sensors.FRONT) {
@@ -198,7 +133,6 @@ class _PosenetScreenState extends State<PosenetScreen>
                 _sensor.value = Sensors.FRONT;
               }
             },
-            onResolutionTap: () => _buildChangeResolutionDialog(),
           ),
         ),
         BottomBarWidget(
@@ -215,31 +149,8 @@ class _PosenetScreenState extends State<PosenetScreen>
             }
             setState(() {});
           },
-          rotationController: _iconsAnimationController,
-          captureMode: _captureMode,
         ),
       ],
-    );
-  }
-
-  _buildChangeResolutionDialog() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => ListView.separated(
-        itemBuilder: (context, index) => ListTile(
-          key: ValueKey("resOption"),
-          onTap: () {
-            this._photoSize.value = _availableSizes[index];
-            setState(() {});
-            Navigator.of(context).pop();
-          },
-          leading: Icon(Icons.aspect_ratio),
-          title: Text(
-              "${_availableSizes[index].width}/${_availableSizes[index].height}"),
-        ),
-        separatorBuilder: (context, index) => Divider(),
-        itemCount: _availableSizes.length,
-      ),
     );
   }
 
@@ -271,10 +182,7 @@ class _PosenetScreenState extends State<PosenetScreen>
     }
   }
 
-  bool isDetecting = false;
-  var counter = 0;
-
-  void drawBoundedBoxes(Uint8List img, Size size) async {
+  void drawBoundedBoxes(Uint8List img) async {
     if (mounted) {
       // Process every 5th frame
       if (counter % 5 == 0) {
@@ -292,7 +200,7 @@ class _PosenetScreenState extends State<PosenetScreen>
             // Probably got something to do with the rotation
             // TODO: Fix this
             imageFile.writeAsBytes(img).then((res) => Tflite.runPoseNetOnImage(
-                        path: myImagePath, numResults: 2, threshold: 0.8)
+                        path: myImagePath, numResults: 2, threshold: 0.5)
                     .then((recognitions) {
                   print(recognitions?.length);
                   if (mounted) {
@@ -315,7 +223,7 @@ class _PosenetScreenState extends State<PosenetScreen>
     }
   }
 
-  Widget buildFullscreenCamera({required Size screen}) {
+  Widget buildFullscreenCamera() {
     return Positioned(
       top: 0,
       left: 0,
@@ -326,27 +234,18 @@ class _PosenetScreenState extends State<PosenetScreen>
           orientation: DeviceOrientation.portraitUp,
           onPermissionsResult: _onPermissionsResult,
           selectDefaultSize: (availableSizes) {
-            this._availableSizes = availableSizes;
             return availableSizes[0];
           },
-          captureMode: _captureMode,
-          photoSize: _photoSize,
+          captureMode: ValueNotifier(CaptureModes.PHOTO),
+          photoSize: ValueNotifier(Size(300, 300)),
           sensor: _sensor,
-          enableAudio: _enableAudio,
-          switchFlashMode: _switchFlash,
+          enableAudio: ValueNotifier(true),
           zoom: _zoomNotifier,
           imagesStreamBuilder: (imageStream) {
             /// listen for images preview stream
             /// you can use it to process AI recognition or anything else...
-            print("-- init CamerAwesome images stream");
-            setState(() {
-              previewStream = imageStream;
-            });
-
             imageStream?.listen((Uint8List imageData) {
-              drawBoundedBoxes(imageData, screen);
-              print(
-                  "...${DateTime.now()} new image received... ${imageData.lengthInBytes} bytes");
+              drawBoundedBoxes(imageData);
             });
           },
         ),

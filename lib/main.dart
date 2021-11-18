@@ -117,6 +117,8 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       String sendingPromptType = promptType[randomNumber];
       _handleUserInteraction();
       Timer(const Duration(minutes: 5), _goToCharger);
+      SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
       Get.to(
         () => ReminderScreen(
           text: promptText[randomNumber],
