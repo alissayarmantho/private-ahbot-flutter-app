@@ -36,7 +36,6 @@ class _PosenetScreenState extends State<PosenetScreen>
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
     super.initState();
     loadModel();
     loadStorage();
@@ -70,7 +69,6 @@ class _PosenetScreenState extends State<PosenetScreen>
     _zoomNotifier.dispose();
     _photoSize.dispose();
     _sensor.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
