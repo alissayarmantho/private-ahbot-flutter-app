@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:botapp/constants.dart';
 import 'package:botapp/controllers/reminder_controller.dart';
 import 'package:botapp/controllers/user_controller.dart';
-import 'package:botapp/models/reminder.dart';
 import 'package:botapp/models/user.dart';
 import 'package:botapp/widgets/app_header.dart';
 import 'package:flutter/material.dart';
